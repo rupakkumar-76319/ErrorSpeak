@@ -41,23 +41,23 @@ Build mode: fast
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored — Slice 2 preset triage verified in browser
-- [ ] Final kick-the-tires exploration and feedback completed
+- [x] Early usable behavior explored — Slice 2 preset triage verified in browser
+- [x] Final kick-the-tires exploration and feedback completed
 
 ## Final Review
 
-- [ ] Final review complete — feedback resolved and learner confirms ready to ship
+- [x] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
 
-- [ ] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
-- [ ] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
-- [ ] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
+- [x] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
+- [x] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
+- [x] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
 
-Activity and evidence: [to be filled upon completion]
-Route and stops: [to be filled upon completion]
-Edit outcome: [to be filled upon completion]
-Reflection: [to be filled upon completion]
-Activity mode: [to be filled upon completion]
+Activity and evidence: Verified all 5 error presets parse into complete TriageReports (src/engine/test-parser.js) and render interactive triage HUD (src/components/TriageCard.jsx).
+Route and stops: Stop 1: src/components/TerminalInput.jsx (entry); Stop 2: src/engine/parser.js (kernel); Stop 3: src/components/TriageCard.jsx (remediation).
+Edit outcome: Test script added to package.json and verified.
+Reflection: Focused alternative applied; deterministic local fallback ensures zero demo failure.
+Activity mode: Live app and editor running at http://localhost:5173.
 
 ## Revisions
