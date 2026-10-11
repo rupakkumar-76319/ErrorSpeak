@@ -1,4 +1,4 @@
-import { ERROR_PRESETS } from './presets';
+import { ERROR_PRESETS } from './presets.js';
 
 export function detectEnvironment(rawText) {
   if (!rawText) return null;

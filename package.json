@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node src/engine/test-parser.js"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.3",

@@ -19,7 +19,7 @@ Build mode: fast
   Learner check: Open http://localhost:5173 and see dark-mode terminal studio.
   Commit: `feat: scaffold ErrorSpeak developer console and terminal input`
 
-- [ ] **2. Diagnostic Engine & One-Click Presets**
+- [x] **2. Diagnostic Engine & One-Click Presets**
   Becomes usable: Clicking any of the 5 presets (Python KeyError, Node Module Not Found, Git Conflict, Docker OOM, CORS) immediately parses the error and populates the structured triage model.
   Why now: The unique kernel (the triage logic) comes early, not last.
   PRD ref: `prd.md > Deterministic & AI Triage Engine`, `prd.md > The Core Journey`
@@ -29,7 +29,7 @@ Build mode: fast
   Learner check: Click each preset chip in the browser and see the input update and detection badge change.
   Commit: `feat: implement triage parser engine and 5 developer presets`
 
-- [ ] **3. Interactive Remediation Card with 1-Click Fix & Confetti**
+- [x] **3. Interactive Remediation Card with 1-Click Fix & Confetti**
   Becomes usable: Full 3-part triage card appears with plain-language explanation, pinpoint fault line, copyable terminal command with visual clipboard feedback and confetti celebration.
   Why now: Closes the core loop and delivers the working POC described in scope and PRD for demo video recording.
   PRD ref: `prd.md > Remediation Action Card`, `prd.md > States and Boundaries`
