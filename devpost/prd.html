@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ErrorSpeak — Product Requirements Companion</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --cyan: #38bdf8;
+      --emerald: #34d399;
+      --rose: #f43f5e;
+      --amber: #fbbf24;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; }
+    body { background: var(--bg); color: var(--text); padding: 2rem 1rem; line-height: 1.6; }
+    .container { max-width: 900px; margin: 0 auto; }
+    header { border-bottom: 1px solid var(--card-border); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    .badge { display: inline-block; background: rgba(56, 189, 248, 0.12); color: var(--cyan); padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; border: 1px solid var(--cyan); }
+    h1 { font-size: 2.2rem; margin: 0.75rem 0 0.5rem 0; color: #fff; }
+    .tagline { color: var(--muted); font-size: 1.05rem; }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    h2 { font-size: 1.25rem; color: var(--cyan); margin-bottom: 0.85rem; }
+    h3 { font-size: 1.05rem; color: #fff; margin: 1rem 0 0.5rem 0; }
+    p, li { color: #d1d5db; font-size: 0.95rem; }
+    ul { padding-left: 1.25rem; margin: 0.5rem 0; }
+    li { margin-bottom: 0.35rem; }
+    .journey-stepper { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; margin: 1rem 0; }
+    .step { background: #162032; border: 1px solid var(--card-border); border-radius: 8px; padding: 1rem; position: relative; }
+    .step-num { font-size: 0.75rem; font-weight: bold; color: var(--cyan); text-transform: uppercase; }
+    .step-name { font-size: 0.95rem; font-weight: 600; color: #fff; margin: 0.25rem 0; }
+    .step-detail { font-size: 0.8rem; color: var(--muted); }
+    .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    @media(max-width: 640px) { .feature-grid { grid-template-columns: 1fr; } }
+    .feature-box { background: #162032; border: 1px solid var(--card-border); border-radius: 8px; padding: 1rem; }
+    .pill { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; }
+    .pill-cyan { background: rgba(56, 189, 248, 0.2); color: var(--cyan); }
+    .pill-emerald { background: rgba(52, 211, 153, 0.2); color: var(--emerald); }
+    .pill-rose { background: rgba(244, 63, 94, 0.2); color: var(--rose); }
+    .criteria { background: #0c121e; border-left: 3px solid var(--emerald); padding: 0.5rem 0.75rem; margin-top: 0.5rem; font-size: 0.85rem; color: #cbd5e1; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">DEVPOST LEARN • 3-PRD ARTIFACT</span>
+      <h1>📐 ErrorSpeak — Product Requirements</h1>
+      <p class="tagline">Interactive Specification of Surfaces, Core User Flow, and Acceptance Criteria</p>
+    </header>
+
+    <div class="card">
+      <h2>🚀 The Core User Journey</h2>
+      <div class="journey-stepper">
+        <div class="step">
+          <div class="step-num">Step 1</div>
+          <div class="step-name">Arrival & Preset</div>
+          <div class="step-detail">Opens HUD; selects 1-of-5 presets or pastes stack trace.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 2</div>
+          <div class="step-name">Local Triage</div>
+          <div class="step-detail">Auto-detects runtime (Python, Node, Docker) & fault line in &lt;100ms.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 3</div>
+          <div class="step-name">Inspection</div>
+          <div class="step-detail">Reads plain-English translation + pinpoint fault line.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 4</div>
+          <div class="step-name">Remediation</div>
+          <div class="step-detail">Clicks "Copy Fix Command" to execute verified solution.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🖥️ Visual Surfaces & Workspace Layout</h2>
+      <p>A unified developer HUD engineered for maximum demo impact and speed:</p>
+      <div class="feature-grid">
+        <div class="feature-box">
+          <span class="pill pill-cyan">SURFACE 1</span>
+          <h3>Terminal Ingestion Console</h3>
+          <p>Monospace editor with sample preset ribbon, live character count, and run action button.</p>
+          <div class="criteria">✓ Instantly triggers on preset click without full page refresh.</div>
+        </div>
+        <div class="feature-box">
+          <span class="pill pill-emerald">SURFACE 2</span>
+          <h3>Triage & Remediation Card</h3>
+          <p>Severity gauge, fault line highlight, plain-English summary, and 1-click copyable shell command.</p>
+          <div class="criteria">✓ Copy button triggers visual feedback and clipboard write.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🛡️ States & Boundaries</h2>
+      <ul>
+        <li><strong>Empty State:</strong> Monospace blinking terminal cursor with contextual guide chips.</li>
+        <li><strong>Analyzing State:</strong> Smooth scanning animation (<200ms) with runtime detection badge.</li>
+        <li><strong>Success State:</strong> Populated 3-layer diagnostic card with copyable terminal fix.</li>
+        <li><strong>Offline Resilient:</strong> Works completely offline with zero API calls required for presets.</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

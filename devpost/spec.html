@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ErrorSpeak — Technical Specification Companion</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #111827;
+      --border: #1f2937;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --cyan: #38bdf8;
+      --emerald: #34d399;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; }
+    body { background: var(--bg); color: var(--text); padding: 2rem 1rem; line-height: 1.6; }
+    .container { max-width: 900px; margin: 0 auto; }
+    header { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    .badge { display: inline-block; background: rgba(56, 189, 248, 0.12); color: var(--cyan); padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; border: 1px solid var(--cyan); }
+    h1 { font-size: 2.2rem; margin: 0.75rem 0 0.5rem 0; color: #fff; }
+    .tagline { color: var(--muted); font-size: 1.05rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    h2 { font-size: 1.25rem; color: var(--cyan); margin-bottom: 0.85rem; }
+    p, li { color: #d1d5db; font-size: 0.95rem; }
+    ul { padding-left: 1.25rem; margin: 0.5rem 0; }
+    li { margin-bottom: 0.35rem; }
+    pre { background: #060910; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; color: var(--emerald); font-family: monospace; font-size: 0.88rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+    .tech-box { background: #162032; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+    .tech-name { font-weight: bold; color: #fff; font-size: 1rem; margin-bottom: 0.25rem; }
+    .tech-desc { font-size: 0.82rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">DEVPOST LEARN • 4-SPEC ARTIFACT</span>
+      <h1>🛠️ ErrorSpeak — Technical Specification</h1>
+      <p class="tagline">System Architecture, Stack Blueprint, and Component Schemas</p>
+    </header>
+
+    <div class="card">
+      <h2>⚡ Execution Architecture</h2>
+      <p>100% CPU-native architecture running locally in the browser with Vite + React. Zero GPU requirements, sub-millisecond triage parsing, zero cloud cost.</p>
+      <div class="grid-3" style="margin-top: 1rem;">
+        <div class="tech-box">
+          <div class="tech-name">Vite + React 18/19</div>
+          <div class="tech-desc">Ultra-fast compilation and reactive component updates.</div>
+        </div>
+        <div class="tech-box">
+          <div class="tech-name">Tailwind CSS</div>
+          <div class="tech-desc">Developer dark-mode styling with zero runtime overhead.</div>
+        </div>
+        <div class="tech-box">
+          <div class="tech-name">Deterministic Triage Engine</div>
+          <div class="tech-desc">Pattern matcher for Python, Node, Git, Docker, and CORS errors.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📂 Application File Structure</h2>
+      <pre>
+M:\build-with-ai-project\
+├── devpost/               # Devpost hackathon artifacts (scope, prd, spec)
+├── src/
+│   ├── components/
+│   │   ├── Header.jsx        # Branding and system badges
+│   │   ├── PresetRibbon.jsx  # One-click demo error chips
+│   │   ├── TerminalInput.jsx # Monospace input editor
+│   │   └── TriageCard.jsx    # Diagnostic report & copyable fix
+│   ├── engine/
+│   │   ├── parser.js         # Local CPU triage regex engine
+│   │   └── presets.js        # 5 preloaded error scenarios
+│   ├── App.jsx               # Root workstation coordinator
+│   ├── index.css             # Tailwind base and theme variables
+│   └── main.jsx              # React mounting root
+├── index.html
+├── package.json
+└── vite.config.js
+      </pre>
+    </div>
+
+    <div class="card">
+      <h2>🚀 How to Run</h2>
+      <pre>npm run dev</pre>
+      <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted);">Opens at <code>http://localhost:5173</code> in your local browser.</p>
+    </div>
+  </div>
+</body>
+</html>
