@@ -115,7 +115,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="border-t border-slate-800/80 bg-slate-950/60 py-3 text-center text-xs font-mono text-slate-500">
-        ErrorSpeak • Built with AI Agentic Spec-Driven Workflow • Devpost Hackathon 2026
+        ErrorSpeak • Spec-Driven Terminal Triage Studio • Devpost Build With AI 2026
       </footer>
     </div>
   );

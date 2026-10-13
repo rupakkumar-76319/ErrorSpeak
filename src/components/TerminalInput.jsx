@@ -93,7 +93,7 @@ export default function TerminalInput({
           }`}
         >
           <Play className="w-3.5 h-3.5 fill-current" />
-          <span>{isAnalyzing ? 'Triaging...' : 'Run Triage Agent'}</span>
+          <span>{isAnalyzing ? 'Triaging...' : 'Run Triage Engine'}</span>
           <span className="hidden sm:inline text-[10px] opacity-75 font-normal">(Ctrl+↵)</span>
         </button>
       </div>
