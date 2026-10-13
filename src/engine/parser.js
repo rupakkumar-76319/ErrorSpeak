@@ -22,6 +22,7 @@ export function detectEnvironment(rawText) {
   return 'Terminal / Generic';
 }
 
+
 export function parseError(rawText) {
   if (!rawText || !rawText.trim()) return null;
 

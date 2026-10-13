@@ -55,3 +55,4 @@ A developer opens the web app in their browser, pastes a messy Python `KeyError`
 * **User Accounts / Authentication:** Unnecessary friction for a hackathon proof of concept.
 * **Heavy Local GPU Model Weights:** App runs 100% lightweight on CPU via local parsing and lightweight cloud API calls.
 * **Complex Multi-service Cloud Backends:** Kept self-contained as a fast, zero-latency frontend application for bulletproof reliability.
+

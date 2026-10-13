@@ -24,6 +24,7 @@ KeyError: 'admin'`,
       whyItWorks: "Using `.get()` with safe defaults prevents runtime KeyError crashes when optional dictionary keys are absent.",
     }
   },
+  
   {
     id: 'node-module-missing',
     label: 'Node.js Module Missing',
