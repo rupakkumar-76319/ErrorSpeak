@@ -44,4 +44,29 @@ if (customNodeParsed.fixCommand !== 'npm install axios') {
   process.exit(1);
 }
 
+const userPowershell = `C:\\Users\\rupak> thi
+thi : The term 'thi' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path
+was included, verify that the path is correct and try again.
+At line:1 char:1
++ thi
++ ~~~
+    + CategoryInfo          : ObjectNotFound: (thi:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+C:\\Users\\rupak>`;
+
+const pwshParsed = parseError(userPowershell);
+console.log(`✓ [PowerShell] Env: ${pwshParsed.environment} (Expected: PowerShell / Shell)`);
+console.log(`✓ [PowerShell] Error: ${pwshParsed.errorType} (Expected: CommandNotFoundException)`);
+console.log(`✓ [PowerShell] Offending Code: ${pwshParsed.offendingCode} (Expected: thi)`);
+console.log(`✓ [PowerShell] Location: ${pwshParsed.location} (Expected: Line 1, Char 1)`);
+console.log(`✓ [PowerShell] Fix Command: ${pwshParsed.fixCommand}`);
+console.log(`✓ [PowerShell] Explanation: ${pwshParsed.plainExplanation}`);
+
+if (pwshParsed.offendingCode !== 'thi' || pwshParsed.environment !== 'PowerShell / Shell') {
+  console.error('PowerShell parsing failed!');
+  process.exit(1);
+}
+
 console.log('\nALL TESTS PASSED WITH 100% ACCURACY!');
+

@@ -52,6 +52,8 @@ export default function TriageCard({ report }) {
         return 'bg-orange-950/70 text-orange-300 border-orange-700/60';
       case 'Docker':
         return 'bg-cyan-950/70 text-cyan-300 border-cyan-700/60';
+      case 'PowerShell / Shell':
+        return 'bg-blue-950/70 text-blue-300 border-blue-700/60';
       default:
         return 'bg-purple-950/70 text-purple-300 border-purple-700/60';
     }

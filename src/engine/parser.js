@@ -53,6 +53,15 @@ export function detectEnvironment(rawText) {
   ) {
     return 'Web / Network';
   }
+  if (
+    text.includes('commandnotfoundexception') ||
+    text.includes('is not recognized as the name of a cmdlet') ||
+    text.includes('categoryinfo          : objectnotfound') ||
+    text.includes('is not recognized as an internal or external command') ||
+    text.includes('command not found')
+  ) {
+    return 'PowerShell / Shell';
+  }
   return 'Terminal / Generic';
 }
 
@@ -242,6 +251,36 @@ export function parseError(rawText) {
       fixCommand = 'docker logs --tail 50 <container_name>';
       whyItWorks = 'Viewing the last 50 container log entries reveals the exact line where the container crashed.';
     }
+  }
+
+  // --- POWERSHELL / CLI PARSER ---
+  else if (env === 'PowerShell / Shell') {
+    const pwshCmdMatch = trimmed.match(/The term '([^']+)' is not recognized/i);
+    const cmdNotFoundMatch = trimmed.match(/([a-zA-Z0-9_\-\.]+):\s*command not found/i);
+    const lineMatch = trimmed.match(/At line:(\d+)\s+char:(\d+)/i);
+
+    let badCmd = 'command';
+    if (pwshCmdMatch) {
+      badCmd = pwshCmdMatch[1];
+    } else if (cmdNotFoundMatch) {
+      badCmd = cmdNotFoundMatch[1];
+    } else {
+      const firstLine = lines[0] || '';
+      badCmd = firstLine.replace(/^.*[>#$]\s*/, '').trim().split(' ')[0] || 'command';
+    }
+
+    errorType = 'CommandNotFoundException';
+    severity = 3;
+    location = lineMatch ? `Line ${lineMatch[1]}, Char ${lineMatch[2]}` : 'Terminal Prompt';
+    offendingCode = badCmd;
+    plainExplanation = `PowerShell does not recognize '${badCmd}'. This is usually a typo or an uninstalled program that is not in your Windows PATH environment variable.`;
+    rootCause = `The cmdlet, script, or executable '${badCmd}' was not found in any directory listed in $env:PATH.`;
+    fixCommand = `Get-Command ${badCmd} -ErrorAction SilentlyContinue`;
+    whyItWorks = `In PowerShell, executables must be installed in a directory listed in $env:PATH to be called directly.`;
+    fixDiff = {
+      before: badCmd,
+      after: `# Check command spelling or install via package manager:\n# winget search ${badCmd}\n# npm install -g ${badCmd}`,
+    };
   }
 
   // --- GENERIC / OTHER ---
