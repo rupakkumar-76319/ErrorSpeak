@@ -9,10 +9,10 @@ export default function PresetRibbon({ activePresetId, onSelectPreset }) {
         <div className="flex items-center gap-1.5 text-xs font-mono text-slate-400">
           <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
           <span className="font-semibold text-slate-300">Quick-Load Demo Presets:</span>
-          <span className="hidden sm:inline text-slate-500">(1-click offline triage)</span>
+          <span className="hidden sm:inline text-slate-500">(sample errors, parsed live)</span>
         </div>
         <span className="text-[10px] font-mono text-slate-500">
-          5 Scenario Presets
+          {ERROR_PRESETS.length} samples
         </span>
       </div>
 

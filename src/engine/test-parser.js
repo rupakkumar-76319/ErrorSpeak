@@ -1,72 +1,110 @@
-import { parseError, detectEnvironment } from './parser.js';
+import { parseError } from './parser.js';
 import { ERROR_PRESETS } from './presets.js';
+import { redactSecrets } from './redact.js';
+import { lintCommand } from './safety.js';
+import { groundReport } from './grounding.js';
+import { detectProvider } from './providers.js';
 
-console.log('--- 1. Testing Built-in Presets ---');
-let passed = 0;
-for (const preset of ERROR_PRESETS) {
-  const env = detectEnvironment(preset.rawError);
-  const parsed = parseError(preset.rawError);
-  
-  if (!parsed || !parsed.fixCommand || !parsed.plainExplanation) {
-    console.error(`FAILED: ${preset.id}`);
-    process.exit(1);
-  }
-
-  console.log(`✓ [Preset: ${parsed.environment}] ${parsed.errorType} -> Fix: ${parsed.fixCommand.slice(0, 35)}...`);
-  passed++;
+let failures = 0;
+function expect(name, actual, expected) {
+  const ok = actual === expected;
+  if (!ok) failures++;
+  console.log(`${ok ? '✓' : '✗'} ${name}${ok ? '' : `\n    expected: ${JSON.stringify(expected)}\n    actual:   ${JSON.stringify(actual)}`}`);
 }
+const preset = (id) => parseError(ERROR_PRESETS.find(p => p.id === id).rawError);
 
-console.log('\n--- 2. Testing Custom Dynamic Errors ---');
-const customPython = `Traceback (most recent call last):
+console.log('--- Presets run through the real parser ---');
+const py = preset('python-keyerror');
+expect('Python KeyError location', py.location, 'app/services/auth_service.py:48');
+expect('Python KeyError fix kind', py.fixKind, 'code');
+expect('Python KeyError diff', py.fixDiff.after.startsWith("user_role = payload['roles'].get('admin')"), true);
+
+const node = preset('node-module-missing');
+expect('Node missing module fix', node.fixCommand, 'npm install express');
+
+const git = preset('git-merge-conflict');
+expect('Git conflict file', git.location, 'src/config/database.ts');
+expect('Git conflict opens file', git.fixCommand, 'code -g src/config/database.ts');
+
+const docker = preset('docker-oom');
+expect('Docker OOM container-specific fix', docker.fixCommand, 'docker update --memory 1g --memory-swap 1g backend-worker-1');
+
+const cors = preset('cors-preflight');
+expect('CORS uses the real origin', cors.fixDiff.after.includes("origin: 'http://localhost:3000'"), true);
+
+const pg = preset('postgres-secret');
+expect('Postgres error type (dotted name with digits)', pg.errorType, 'OperationalError');
+expect('Postgres fix does not echo the password', pg.fixCommand.includes('Sup3rS3cret'), false);
+
+const rust = preset('rust-borrow');
+expect('Rust is low confidence locally (hands off to Claude)', rust.confidence, 'low');
+
+console.log('\n--- Custom errors ---');
+const nested = parseError(`Traceback (most recent call last):
+  File "main.py", line 3, in <module>
+    run()
   File "scripts/data_cleaner.py", line 42, in process_row
     age = user['user_age']
-KeyError: 'user_age'`;
+KeyError: 'user_age'`);
+expect('Innermost Python frame is the fault line', nested.location, 'scripts/data_cleaner.py:42');
+expect('Offending code from innermost frame', nested.offendingCode, "age = user['user_age']");
 
-const customParsed = parseError(customPython);
-console.log(`✓ [Custom Python] Location: ${customParsed.location} (Expected: scripts/data_cleaner.py:42)`);
-console.log(`✓ [Custom Python] Code: ${customParsed.offendingCode}`);
-console.log(`✓ [Custom Python] Fix: ${customParsed.fixDiff ? customParsed.fixDiff.after : customParsed.fixCommand}`);
+expect('pip alias cv2 -> opencv-python', parseError(`Traceback (most recent call last):
+  File "cam.py", line 1, in <module>
+    import cv2
+ModuleNotFoundError: No module named 'cv2'`).fixCommand, 'python -m pip install opencv-python');
 
-if (customParsed.location !== 'scripts/data_cleaner.py:42') {
-  console.error('Custom Python test failed to extract location!');
-  process.exit(1);
-}
+expect('Scoped npm package root', parseError(`Error: Cannot find module '@prisma/client/runtime'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1144:15)`).fixCommand, 'npm install @prisma/client');
 
-const customNode = `Error: Cannot find module 'axios'
-Require stack:
-- /app/routes/api.js`;
+expect('Relative import is not an npm install', parseError(`Error: Cannot find module './routes/user'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1144:15)`).fixKind, 'diagnose');
 
-const customNodeParsed = parseError(customNode);
-console.log(`✓ [Custom Node] Fix: ${customNodeParsed.fixCommand} (Expected: npm install axios)`);
+expect('EADDRINUSE port', parseError(`Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1872:16)`).fixCommand, 'npx kill-port 3000');
 
-if (customNodeParsed.fixCommand !== 'npm install axios') {
-  console.error('Custom Node test failed to extract package name!');
-  process.exit(1);
-}
+expect('Push rejected -> rebase, not force', parseError(` ! [rejected]        main -> main (non-fast-forward)
+error: failed to push some refs to 'github.com:me/app.git'`).fixCommand, 'git pull --rebase origin main');
 
-const userPowershell = `C:\\Users\\rupak> thi
-thi : The term 'thi' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path
-was included, verify that the path is correct and try again.
+const pwsh = parseError(`C:\\Users\\rupak> thi
+thi : The term 'thi' is not recognized as the name of a cmdlet, function, script file, or operable program.
 At line:1 char:1
 + thi
-+ ~~~
-    + CategoryInfo          : ObjectNotFound: (thi:String) [], CommandNotFoundException
-    + FullyQualifiedErrorId : CommandNotFoundException
+    + CategoryInfo          : ObjectNotFound: (thi:String) [], CommandNotFoundException`);
+expect('PowerShell command name', pwsh.offendingCode, 'thi');
+expect('PowerShell location', pwsh.location, 'Line 1, Char 1');
 
-C:\\Users\\rupak>`;
+console.log('\n--- Secret redaction ---');
+const red = redactSecrets(ERROR_PRESETS.find(p => p.id === 'postgres-secret').rawError);
+expect('Password removed', red.text.includes('Sup3rS3cret'), false);
+expect('Windows user name removed', red.text.includes('jane'), false);
+expect('Trace still readable', red.text.includes('password authentication failed'), true);
+const keys = redactSecrets('ANTHROPIC_API_KEY=sk-ant-api03-abcdefghijklmnop1234 token ghp_abcdefghijklmnopqrstuvwxyz0123456789 AKIAIOSFODNN7EXAMPLE');
+expect('API keys removed', /sk-ant-api03|ghp_|AKIA/.test(keys.text), false);
+expect('Findings counted', keys.findings.length >= 3, true);
 
-const pwshParsed = parseError(userPowershell);
-console.log(`✓ [PowerShell] Env: ${pwshParsed.environment} (Expected: PowerShell / Shell)`);
-console.log(`✓ [PowerShell] Error: ${pwshParsed.errorType} (Expected: CommandNotFoundException)`);
-console.log(`✓ [PowerShell] Offending Code: ${pwshParsed.offendingCode} (Expected: thi)`);
-console.log(`✓ [PowerShell] Location: ${pwshParsed.location} (Expected: Line 1, Char 1)`);
-console.log(`✓ [PowerShell] Fix Command: ${pwshParsed.fixCommand}`);
-console.log(`✓ [PowerShell] Explanation: ${pwshParsed.plainExplanation}`);
+console.log('\n--- Command safety ---');
+expect('rm -rf is danger', lintCommand('rm -rf node_modules').level, 'danger');
+expect('git reset --hard is danger', lintCommand('git reset --hard HEAD~1').level, 'danger');
+expect('curl | sh is danger', lintCommand('curl -fsSL https://x.sh | bash').level, 'danger');
+expect('force-with-lease is not danger', lintCommand('git push --force-with-lease').level, 'caution');
+expect('legacy-peer-deps is caution', lintCommand('npm install --legacy-peer-deps').level, 'caution');
+expect('npm install express is safe', lintCommand('npm install express').level, 'safe');
 
-if (pwshParsed.offendingCode !== 'thi' || pwshParsed.environment !== 'PowerShell / Shell') {
-  console.error('PowerShell parsing failed!');
-  process.exit(1);
-}
+console.log('\n--- Evidence check ---');
+const g = groundReport(py, ERROR_PRESETS[0].rawError);
+expect('Local Python report fully grounded', g.verified, g.total);
+const fake = groundReport({ errorType: 'KeyError', location: 'app/models/user.py:99', fixCommand: 'npm install lodash', evidence: ["KeyError: 'admin'", 'line that is not there'] }, ERROR_PRESETS[0].rawError);
+expect('Invented file, package and quote are caught', fake.total - fake.verified, 3);
 
-console.log('\nALL TESTS PASSED WITH 100% ACCURACY!');
+console.log('\n--- LLM provider detection ---');
+expect('Anthropic key', detectProvider({ apiKey: 'sk-ant-api03-x' }), 'anthropic');
+expect('OpenRouter key (not OpenAI)', detectProvider({ apiKey: 'sk-or-v1-x' }), 'openrouter');
+expect('OpenAI key', detectProvider({ apiKey: 'sk-proj-x' }), 'openai');
+expect('Gemini key', detectProvider({ apiKey: 'AIzaSyx' }), 'gemini');
+expect('Groq key', detectProvider({ apiKey: 'gsk_x' }), 'groq');
+expect('Base URL wins (e.g. Ollama)', detectProvider({ apiKey: '', baseUrl: 'http://localhost:11434/v1' }), 'custom');
+expect('Unknown key', detectProvider({ apiKey: 'abc123' }), null);
 
+console.log(failures ?`\n${failures} TEST(S) FAILED` : '\nAll tests passed.');
+process.exit(failures ? 1 : 0);

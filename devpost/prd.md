@@ -5,99 +5,114 @@ status: approved
 
 # ErrorSpeak — Product Requirements
 
-An intelligent developer terminal triage studio that transforms opaque terminal errors and stack traces into instant plain-English explanations, visual problem maps, and 1-click verified terminal remediation commands.
+A local-first developer triage tool that turns opaque terminal errors into plain-English explanations, the exact fault line, and fixes that are evidence-checked and safety-checked before the user copies them.
 Source: `scope.md > The Unique Kernel` and `scope.md > The Core Loop`.
 
 ## The Core Journey
-1. **Arrival:** The developer lands on the ErrorSpeak dashboard. A high-contrast dark developer console greets them with a clean code/error input area and a quick-start tray of 5 realistic preloaded error scenarios (Node.js, Python, Docker, Git, Web CORS).
-2. **Error Ingestion:** The developer either clicks a preset scenario or pastes their own raw terminal error output into the console input.
-3. **Instant Triage Execution:** The engine instantly parses the input (client-side in <100ms):
-   - Categorizes runtime environment (e.g., Python 3.11, Node.js 22, Git CLI).
-   - Extracts the exact error type (e.g., `ModuleNotFoundError`, `KeyError`, `OOMKilled`).
-   - Pinpoints the offending file and line number.
-   - Computes an error severity & complexity score (1 to 10).
-4. **Remediation Inspection:** The developer views the 3-panel triage card:
-   - **Plain English Breakdown:** Clear explanation of what went wrong in plain human language.
-   - **Visual Fault Locator:** Code snippet highlighting the exact triggering line.
-   - **Remediation Terminal Command:** 1-click copyable shell command with a rationale of why the command fixes the problem.
-5. **Success / Verification:** The developer clicks "Copy Command", executes it in their shell, and marks the issue as resolved.
+1. **Arrival:** The developer lands on a dark developer console with an input editor and a tray of 7 sample errors (Python, Node.js, Git, Docker, CORS, a Postgres error that leaks a password, and a Rust error the local rules don't cover).
+2. **Error Ingestion:** The developer clicks a sample or pastes their own terminal output. The environment badge updates as they type.
+3. **Local Triage:** The engine parses the input in the browser:
+   - Detects the environment (Python, Node.js, Git, Docker, Web, Shell).
+   - Extracts the error type and the innermost fault location (file and line).
+   - Scores severity (1 to 10) and reports its own confidence (high, medium, low).
+4. **Inspection:** The triage card shows:
+   - **Provenance strip:** local engine or the connected LLM (provider and model name), confidence, and "N/N claims found in your trace".
+   - **What happened:** plain English, with a TL;DR toggle for the root cause.
+   - **Where it broke:** file, line and the offending code.
+   - **The fix:** a command labelled as a real fix, a code edit, or a diagnostic step; a safety rating; and why it works.
+   - **Suggested patch:** before and after code when the fix is an edit.
+   - **Evidence check:** each claim marked found or not found in the trace.
+5. **Second Opinion:** The AI panel shows how many sensitive items will be hidden and lets the user preview the exact redacted text. With a model connected, it returns a structured report that is checked the same way, and the user can switch between the local view and the connected model's view.
+6. **Outcome:** The developer copies the command (confetti only for non-destructive commands) and fixes the error.
 
 ## Screens and Layout
-A single, high-density, beautifully crafted developer studio surface:
-* **Header Bar:** ErrorSpeak logo, CPU-native status badge ("100% Local Engine • Fast Triage"), and GitHub repo link.
-* **Top Ribbon — Quick Presets Tray:** 5 clickable scenario chips:
-  1. `Python KeyError: 'user_id'`
-  2. `Node.js ERR_MODULE_NOT_FOUND: 'express'`
-  3. `Git Conflict: Merge branch 'feature'`
-  4. `Docker OOMKilled (Exit Code 137)`
-  5. `Browser CORS Preflight Blocked`
+A single developer studio surface:
+* **Header Bar:** logo, "Local-first · works offline" badge, "Connect Any LLM" button showing connection state (`LLM: <model>` once connected), and a link to the source.
+* **Sample Tray:** 7 chips: Python KeyError, Node.js Module Missing, Git Merge Conflict, Docker OOMKilled, Browser CORS Block, Postgres Auth (leaks a password), Rust Borrow Error.
 * **Main Split Workstation:**
-  - **Left Panel (Input & Raw Terminal):** Monospace terminal editor with line numbers, clear button, and "Run Triage Agent" CTA.
-  - **Right Panel (Triage Results Card):** 
-    - Diagnostic header: Environment Badge, Error Classification, Severity Meter.
-    - Plain-Language Summary Box.
-    - Root-cause pinpoint box (File + Line).
-    - Fix Action Card with 1-click copyable command & diff view.
-    - "Explain Like I'm 5" vs "Senior Dev TL;DR" toggle.
+  - **Left Panel:** monospace editor with line numbers, live environment badge, clear button, "Run Triage Engine" (Ctrl+Enter).
+  - **Right Panel:** local / connected-model view switch (after the model answers, labelled with the model name), the triage card, and the AI panel.
+* **LLM Settings Modal:** a model-name field and a password-type API key field, a collapsed "Advanced" section for a base URL (any OpenAI-compatible server, e.g. Ollama at `http://localhost:11434/v1`, where the key is optional), a detected-provider line, "remember on this device" option, privacy note, disconnect button.
 
 ## Look and Feel
-* **Palette:** Deep carbon developer dark mode (`#0B0F19`, `#111827`, `#1F2937`) with high-contrast text (`#F9FAFB`).
-* **Accents:** Neon Cyan (`#06B6D4` / `#38BDF8`) for AI diagnostics, Emerald (`#10B981`) for verified fixes, Rose (`#F43F5E`) for error flags, Amber (`#F59E0B`) for warnings.
-* **Typography:** `JetBrains Mono` / `Fira Code` for code & terminal elements, clean modern sans-serif (`Inter`) for analysis and instructions.
-* **Interactions:** Crisp micro-animations, copy button feedback states ("Copied to Clipboard!"), instant preset loading.
+* **Palette:** deep slate dark mode (`#070B14`, slate-900/950 cards) with high-contrast text.
+* **Accents:** cyan for diagnosis, emerald for safe or verified, amber for caution or unverified, rose for errors and destructive commands, violet for the connected LLM.
+* **Typography:** Fira Code for terminal content, Inter for explanations.
+* **Interactions:** short scan animation, copy feedback, confetti for safe fixes, collapsible evidence list that opens automatically when something is unverified.
 
 ## Features and Behavior
 
 ### Error Ingestion & Detection
 Source: `scope.md > The Core Loop`.
-- The user can paste any string into the terminal input textarea.
-- The system automatically detects whether the input looks like Python, JavaScript/Node, Git, or Docker.
+- The user can paste any text into the editor or click a sample. Samples go through the same parser as pasted text; there are no canned answers.
 - *Acceptance Criteria:*
-  - [x] Pasting a stack trace immediately updates the active environment badge.
-  - [x] Clicking any preset chip populates the input and triggers analysis immediately without page reload.
+  - [x] Typing or pasting updates the environment badge immediately.
+  - [x] Clicking a sample fills the editor and runs triage without a page reload.
 
-### Deterministic & AI Triage Engine
+### Local Triage Engine
 Source: `scope.md > The Unique Kernel`.
-- The engine decomposes the error into structured JSON: `{ environment, errorType, location, explanation, fixCommand, whyItWorks, severity }`.
-- Operates 100% locally on CPU via smart regex & parser patterns; supports optional live LLM API call if key is provided.
+- Produces a structured report: `{ environment, errorType, severity, location, offendingCode, plainExplanation, rootCause, fixKind, fixCommand, whyItWorks, fixDiff, confidence }`.
+- Uses the innermost Python frame, the first non-internal Node frame, real package names (e.g. `cv2` → `opencv-python`, `@scope/pkg/sub` → `@scope/pkg`), and the container, origin and branch names from the trace.
+- When no rule matches, it says so (low confidence, no fix) instead of guessing.
 - *Acceptance Criteria:*
-  - [x] Correctly identifies error types across all 5 built-in presets.
-  - [x] Displays explanation in plain English with zero jargon.
+  - [x] All 7 samples produce the expected error type, location and fix (`npm test`).
+  - [x] Unrecognized input shows low confidence and points to the AI panel.
 
-### Remediation Action Card
-Source: `scope.md > What "Working" Looks Like`.
-- Displays the exact terminal command or code fix needed to resolve the error.
-- Includes a dedicated "Copy Fix Command" button with visual feedback.
+### Evidence Check
+Source: `scope.md > The Unique Kernel`.
+- Matches the error type, file and line, quoted code, installed package names, and the connected model's evidence quotes against the raw trace.
 - *Acceptance Criteria:*
-  - [x] Clicking copy button places command into system clipboard and shows green checkmark state.
-  - [x] Explanation highlights the command's flag or parameter rationale.
+  - [x] The card shows "N/N claims found in your trace".
+  - [x] An invented file, package or quote is marked "not found" (covered by tests).
+
+### Command Safety Check
+Source: `scope.md > The Unique Kernel`.
+- Rates every suggested command as safe, caution or danger, with reasons.
+- *Acceptance Criteria:*
+  - [x] `rm -rf`, `git reset --hard`, force pushes, `curl | sh` and `docker system prune` are flagged as destructive, and the copy button becomes "Copy anyway".
+  - [x] Placeholders, `sudo`, `--force` and `--legacy-peer-deps` are flagged as caution.
+
+### Connect Any LLM (optional)
+Source: `scope.md > The POC Boundary`.
+- The user enters a model name and an API key; the provider is detected from the key prefix (`sk-ant-` Anthropic, `sk-or-` OpenRouter, `gsk_` Groq, `AIza` Google Gemini, `sk-` OpenAI) or, if a base URL is set under Advanced, treated as a custom OpenAI-compatible server (key optional, e.g. a local Ollama instance).
+- Settings are stored only in this browser, as JSON under `errorspeak.llm` (session by default, or `localStorage` when "Remember" is ticked). The key is sent only to the chosen provider.
+- Redacts API keys, tokens, JWTs, private keys, connection-string passwords, secret assignments, emails and user-folder names before sending; the user can preview the exact text.
+- Anthropic is called through `@anthropic-ai/sdk` with a zod structured-output schema. Every other provider is called as an OpenAI-compatible chat-completions endpoint with `response_format: json_object` and the schema spelled out in the prompt, then validated with zod.
+- *Acceptance Criteria:*
+  - [x] Without a model connected, the panel offers "Connect an LLM to enable" and the app works fully offline.
+  - [x] The Postgres sample shows 2 sensitive items hidden, and the preview contains no password or user name.
+  - [x] The AI report shows a violet "`<provider> · <model>`" badge and goes through the evidence and safety checks.
+  - [x] API errors (bad key, rate limit, model/endpoint not found, network or CORS failure, invalid or wrong-shaped JSON) are shown in the panel and the local diagnosis stays visible.
 
 ## States and Boundaries
-* **Empty State:** Clean terminal prompt with animated cursor (`$ paste error or choose preset above...`).
-* **Active Triage State:** Smooth scanning animation (<200ms) indicating analysis.
-* **Success / Results State:** Rich, color-coded triage card populated with all 4 diagnostic layers.
-* **Invalid / Unrecognized Input State:** Gentle guidance banner suggesting standard formats or offering manual analysis mode.
+* **Empty State:** prompt to paste an error or pick a sample, with the Trace / Explain / Fix safely steps.
+* **Analyzing:** a short scan state on the run button.
+* **Results:** triage card plus AI panel.
+* **Low Confidence:** "No reliable fix from the local rules", and the AI panel is highlighted.
+* **AI Loading / Error:** spinner on the button; readable error message in the panel.
 
 ## Product Decisions
-* **Single Surface Layout:** Chosen over multi-page navigation to keep the core loop frictionless and instantly demonstrable within 60 seconds on video.
-* **Built-in Preset Tray:** Guarantees flawless, zero-lag demonstration during the video pitch without relying on live network connectivity or rate limits.
-* **100% CPU Client Execution:** Enables instantaneous load times, zero backend dependencies, and zero setup hurdles for hackathon reviewers.
+* **Local-first, AI second:** most beginner errors follow known patterns, so they are answered instantly, offline and free; the AI is used where it adds value.
+* **Verify instead of trust:** AI answers and rule answers are both checked against the trace, because a confident wrong answer is the main risk for beginners.
+* **Bring-your-own key and model, no backend:** nothing passes through a server we run, and the user decides which provider to use and what is sent.
+* **Single surface layout:** the whole loop fits on one screen and in a short demo video.
 
 ## What We're Building
-* Complete responsive web dashboard with high-contrast developer theme.
-* Local CPU parsing engine covering Node.js, Python, Git, Docker, and Web errors.
-* 5 realistic preloaded error scenarios with verified fixes.
-* Interactive copy-to-clipboard, view toggles, and severity indicators.
+* Responsive web app with a high-contrast developer theme.
+* Local engine for Python, Node.js, Git, Docker, CORS and shell errors.
+* Evidence check, command safety check and secret redaction.
+* Optional connector to any LLM provider, with structured output.
+* 7 sample errors and an automated test suite.
 
 ## Deferred From the POC
-* Real-time bash shell interception daemon (`errorspeak watch`).
-* User accounts and saved error history database.
-* Full multi-file repository indexing.
+* Shell integration that captures failures automatically (`errorspeak watch`).
+* Saved history of resolved errors.
+* Multi-file repository context for the connected model.
 
 ## Possible Later Enhancements
-* IDE extension for VS Code / Cursor to highlight runtime errors in-line.
-* Automated terminal patch execution via local MCP server.
+* VS Code / Cursor extension that highlights the fault line in place.
+* Learning from fixes the user confirms worked.
 
 ## Non-Goals
-* Re-implementing a full bash terminal emulator in the browser.
-* Training custom local foundation models on GPU.
+* A full terminal emulator in the browser.
+* Running fix commands automatically.

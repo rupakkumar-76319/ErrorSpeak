@@ -61,3 +61,39 @@ Reflection: Focused alternative applied; deterministic local fallback ensures ze
 Activity mode: Live app and editor running at http://localhost:5173.
 
 ## Revisions
+
+Revision 1 (2026-10-20): review against the judging criteria found that the planned LLM connector was never built, some fix commands did not fix anything, sample answers were canned, and the README overclaimed. Scope, PRD and spec were updated first, then these slices were built.
+
+- [x] **4. Honest local engine**
+  Becomes usable: samples run through the real parser; every report has a fixKind and a confidence; unrecognized errors say so instead of guessing.
+  PRD ref: `prd.md > Local Triage Engine`
+  Spec ref: `spec.md > Engine Modules`, `spec.md > Data Model`
+  Build: rewrote `parser.js` (innermost Python frame, pip/npm package-name rules, EADDRINUSE, ERESOLVE, rejected pushes, SSH, Docker daemon/ports, DB auth), reduced `presets.js` to raw inputs, added Postgres and Rust samples.
+  Verify (mechanical): `npm test` checks every sample's error type, location and fix.
+  Commit: `feat: honest local engine with confidence and fix kinds`
+
+- [x] **5. Evidence check and command safety**
+  Becomes usable: the card shows "N/N claims found in your trace" and a safety rating for every command.
+  PRD ref: `prd.md > Evidence Check`, `prd.md > Command Safety Check`
+  Spec ref: `spec.md > Engine Modules`
+  Build: `grounding.js`, `safety.js`, new provenance strip and evidence list in `TriageCard.jsx`.
+  Verify (mechanical): tests confirm destructive commands are flagged and invented claims are caught.
+  Commit: `feat: evidence check and command safety check`
+
+- [x] **6. Ask Claude with redaction**
+  Becomes usable: with their own key, the user asks Claude; secrets are hidden first and the answer is checked.
+  PRD ref: `prd.md > Ask Claude (optional)`
+  Spec ref: `spec.md > External Services and Dependencies`, `spec.md > Security and Privacy`
+  Build: `redact.js`, `claude.js` (structured output, refusal handling, fallbacks), `ClaudePanel.jsx`, `SettingsModal.jsx`, header connection button.
+  Verify (mechanical): `npm run build` passes; tests confirm redaction; request shape checked with a stubbed fetch.
+  Learner check: Postgres sample shows 2 hidden items and a clean preview; Rust sample shows low confidence and offers Claude.
+  Commit: `feat: optional Claude connector with secret redaction`
+
+- [x] **7. Connect any LLM**
+  Becomes usable: the user connects any provider (Anthropic, OpenAI, Gemini, OpenRouter, Groq, or a custom OpenAI-compatible base URL) by entering a model name and an API key; the provider is detected automatically and the answer is checked the same way as before.
+  PRD ref: `prd.md > Connect Any LLM (optional)`
+  Spec ref: `spec.md > External Services and Dependencies`, `spec.md > Engine Modules`
+  Build: `providers.js` (key-prefix and base-URL provider detection), `triage-schema.js` (shared schema, prompt and `toReport`), `llm.js` (OpenAI-compatible dispatcher for non-Anthropic providers), updated `claude.js` (model passed in, effort/fallback gated by model support), renamed `ClaudePanel.jsx` to `AIPanel.jsx`, reworked `SettingsModal.jsx` (model + key + Advanced base URL) and header button; removed `model.js`.
+  Verify (mechanical): `npm test` covers provider detection; request shape checked with stubbed fetch for OpenAI, Gemini and a local base URL.
+  Learner check: modal shows the detected provider.
+  Commit: `feat: connect any LLM provider`

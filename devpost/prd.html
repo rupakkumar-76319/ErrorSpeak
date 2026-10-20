@@ -49,62 +49,163 @@
     <header>
       <span class="badge">DEVPOST LEARN • 3-PRD ARTIFACT</span>
       <h1>📐 ErrorSpeak — Product Requirements</h1>
-      <p class="tagline">Interactive Specification of Surfaces, Core User Flow, and Acceptance Criteria</p>
+      <p class="tagline">A local-first developer triage tool that turns opaque terminal errors into plain-English explanations, the exact fault line, and fixes that are evidence-checked and safety-checked before the user copies them.</p>
     </header>
 
     <div class="card">
-      <h2>🚀 The Core User Journey</h2>
+      <h2>🚀 The Core Journey</h2>
       <div class="journey-stepper">
         <div class="step">
           <div class="step-num">Step 1</div>
-          <div class="step-name">Arrival & Preset</div>
-          <div class="step-detail">Opens HUD; selects 1-of-5 presets or pastes stack trace.</div>
+          <div class="step-name">Arrival</div>
+          <div class="step-detail">A dark developer console with an input editor and a tray of 7 sample errors (Python, Node.js, Git, Docker, CORS, a Postgres error that leaks a password, and a Rust error the local rules don't cover).</div>
         </div>
         <div class="step">
           <div class="step-num">Step 2</div>
-          <div class="step-name">Local Triage</div>
-          <div class="step-detail">Auto-detects runtime (Python, Node, Docker) & fault line in &lt;100ms.</div>
+          <div class="step-name">Error Ingestion</div>
+          <div class="step-detail">Click a sample or paste your own terminal output. The environment badge updates as you type.</div>
         </div>
         <div class="step">
           <div class="step-num">Step 3</div>
-          <div class="step-name">Inspection</div>
-          <div class="step-detail">Reads plain-English translation + pinpoint fault line.</div>
+          <div class="step-name">Local Triage</div>
+          <div class="step-detail">Detects the environment, extracts error type and innermost fault location, scores severity (1-10) and reports confidence (high, medium, low).</div>
         </div>
         <div class="step">
           <div class="step-num">Step 4</div>
-          <div class="step-name">Remediation</div>
-          <div class="step-detail">Clicks "Copy Fix Command" to execute verified solution.</div>
+          <div class="step-name">Inspection</div>
+          <div class="step-detail">Provenance strip, plain English with TL;DR toggle, where it broke, the fix with safety rating, suggested patch, and evidence check.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 5</div>
+          <div class="step-name">Second Opinion</div>
+          <div class="step-detail">The AI panel previews the redacted text; the connected model's structured report is checked the same way as the local one.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 6</div>
+          <div class="step-name">Outcome</div>
+          <div class="step-detail">Copy the command (confetti only for non-destructive commands) and fix the error.</div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h2>🖥️ Visual Surfaces & Workspace Layout</h2>
-      <p>A unified developer HUD engineered for maximum demo impact and speed:</p>
+      <h2>🖥️ Screens and Layout</h2>
+      <p>A single developer studio surface:</p>
       <div class="feature-grid">
         <div class="feature-box">
-          <span class="pill pill-cyan">SURFACE 1</span>
-          <h3>Terminal Ingestion Console</h3>
-          <p>Monospace editor with sample preset ribbon, live character count, and run action button.</p>
-          <div class="criteria">✓ Instantly triggers on preset click without full page refresh.</div>
+          <span class="pill pill-cyan">HEADER</span>
+          <h3>Header Bar</h3>
+          <p>Logo, "Local-first · works offline" badge, "Connect Any LLM" button showing connection state (<code>LLM: &lt;model&gt;</code> once connected), and a link to the source.</p>
         </div>
         <div class="feature-box">
-          <span class="pill pill-emerald">SURFACE 2</span>
-          <h3>Triage & Remediation Card</h3>
-          <p>Severity gauge, fault line highlight, plain-English summary, and 1-click copyable shell command.</p>
+          <span class="pill pill-cyan">TRAY</span>
+          <h3>Sample Tray</h3>
+          <p>7 chips: Python KeyError, Node.js Module Missing, Git Merge Conflict, Docker OOMKilled, Browser CORS Block, Postgres Auth (leaks a password), Rust Borrow Error.</p>
+        </div>
+        <div class="feature-box">
+          <span class="pill pill-emerald">LEFT</span>
+          <h3>Left Panel</h3>
+          <p>Monospace editor with line numbers, live environment badge, clear button, "Run Triage Engine" (Ctrl+Enter).</p>
+          <div class="criteria">✓ Instantly triggers on preset click without a full page reload.</div>
+        </div>
+        <div class="feature-box">
+          <span class="pill pill-emerald">RIGHT</span>
+          <h3>Right Panel</h3>
+          <p>Local / connected-model view switch (after the model answers, labelled with the model name), the triage card, and the AI panel.</p>
           <div class="criteria">✓ Copy button triggers visual feedback and clipboard write.</div>
         </div>
       </div>
+      <h3>LLM Settings Modal</h3>
+      <p>A model-name field and a password-type API key field, a collapsed "Advanced" section for a base URL (any OpenAI-compatible server, e.g. Ollama at <code>http://localhost:11434/v1</code>, where the key is optional), a detected-provider line, "remember on this device" option, privacy note, disconnect button.</p>
     </div>
 
     <div class="card">
-      <h2>🛡️ States & Boundaries</h2>
+      <h2>🎨 Look and Feel</h2>
       <ul>
-        <li><strong>Empty State:</strong> Monospace blinking terminal cursor with contextual guide chips.</li>
-        <li><strong>Analyzing State:</strong> Smooth scanning animation (<200ms) with runtime detection badge.</li>
-        <li><strong>Success State:</strong> Populated 3-layer diagnostic card with copyable terminal fix.</li>
-        <li><strong>Offline Resilient:</strong> Works completely offline with zero API calls required for presets.</li>
+        <li><strong>Palette:</strong> deep slate dark mode (<code>#070B14</code>, slate-900/950 cards) with high-contrast text.</li>
+        <li><strong>Accents:</strong> cyan for diagnosis, emerald for safe or verified, amber for caution or unverified, rose for errors and destructive commands, violet for the connected LLM.</li>
+        <li><strong>Typography:</strong> Fira Code for terminal content, Inter for explanations.</li>
+        <li><strong>Interactions:</strong> short scan animation, copy feedback, confetti for safe fixes, collapsible evidence list that opens automatically when something is unverified.</li>
       </ul>
+    </div>
+
+    <div class="card">
+      <h2>⚙️ Features and Behavior</h2>
+      <h3>Error Ingestion &amp; Detection</h3>
+      <p>The user can paste any text into the editor or click a sample. Samples go through the same parser as pasted text; there are no canned answers.</p>
+      <div class="criteria">✓ Typing or pasting updates the environment badge immediately.<br>✓ Clicking a sample fills the editor and runs triage without a page reload.</div>
+
+      <h3>Local Triage Engine</h3>
+      <p>Produces a structured report (environment, errorType, severity, location, offendingCode, plainExplanation, rootCause, fixKind, fixCommand, whyItWorks, fixDiff, confidence). Uses the innermost Python frame, the first non-internal Node frame, real package names (e.g. <code>cv2</code> → <code>opencv-python</code>, <code>@scope/pkg/sub</code> → <code>@scope/pkg</code>), and the container, origin and branch names from the trace. When no rule matches, it says so instead of guessing.</p>
+      <div class="criteria">✓ All 7 samples produce the expected error type, location and fix (<code>npm test</code>).<br>✓ Unrecognized input shows low confidence and points to the AI panel.</div>
+
+      <h3>Evidence Check</h3>
+      <p>Matches the error type, file and line, quoted code, installed package names, and the connected model's evidence quotes against the raw trace.</p>
+      <div class="criteria">✓ The card shows "N/N claims found in your trace".<br>✓ An invented file, package or quote is marked "not found" (covered by tests).</div>
+
+      <h3>Command Safety Check</h3>
+      <p>Rates every suggested command as safe, caution or danger, with reasons.</p>
+      <div class="criteria">✓ <code>rm -rf</code>, <code>git reset --hard</code>, force pushes, <code>curl | sh</code> and <code>docker system prune</code> are flagged as destructive, and the copy button becomes "Copy anyway".<br>✓ Placeholders, <code>sudo</code>, <code>--force</code> and <code>--legacy-peer-deps</code> are flagged as caution.</div>
+
+      <h3>Connect Any LLM (optional)</h3>
+      <p>The user enters a model name and an API key; the provider is detected from the key prefix (<code>sk-ant-</code> Anthropic, <code>sk-or-</code> OpenRouter, <code>gsk_</code> Groq, <code>AIza</code> Google Gemini, <code>sk-</code> OpenAI) or, if a base URL is set under Advanced, treated as a custom OpenAI-compatible server (key optional, e.g. a local Ollama instance). Settings are stored only in this browser. Redacts API keys, tokens, JWTs, private keys, connection-string passwords, secret assignments, emails and user-folder names before sending; the user can preview the exact text. Anthropic is called through its SDK with a zod structured-output schema; every other provider is called as an OpenAI-compatible endpoint with the schema spelled out in the prompt, then validated.</p>
+      <div class="criteria">✓ Without a model connected, the panel offers "Connect an LLM to enable" and the app works fully offline.<br>✓ The Postgres sample shows 2 sensitive items hidden, and the preview contains no password or user name.<br>✓ The AI report shows a violet "&lt;provider&gt; · &lt;model&gt;" badge and goes through the evidence and safety checks.<br>✓ API errors (bad key, rate limit, model/endpoint not found, network or CORS failure, invalid or wrong-shaped JSON) are shown in the panel and the local diagnosis stays visible.</div>
+    </div>
+
+    <div class="card">
+      <h2>🛡️ States and Boundaries</h2>
+      <ul>
+        <li><strong>Empty State:</strong> prompt to paste an error or pick a sample, with the Trace / Explain / Fix safely steps.</li>
+        <li><strong>Analyzing:</strong> a short scan state on the run button.</li>
+        <li><strong>Results:</strong> triage card plus AI panel.</li>
+        <li><strong>Low Confidence:</strong> "No reliable fix from the local rules", and the AI panel is highlighted.</li>
+        <li><strong>AI Loading / Error:</strong> spinner on the button; readable error message in the panel.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🧭 Product Decisions</h2>
+      <ul>
+        <li><strong>Local-first, AI second:</strong> most beginner errors follow known patterns, so they are answered instantly, offline and free; the AI is used where it adds value.</li>
+        <li><strong>Verify instead of trust:</strong> AI answers and rule answers are both checked against the trace, because a confident wrong answer is the main risk for beginners.</li>
+        <li><strong>Bring-your-own key and model, no backend:</strong> nothing passes through a server we run, and the user decides which provider to use and what is sent.</li>
+        <li><strong>Single surface layout:</strong> the whole loop fits on one screen and in a short demo video.</li>
+      </ul>
+    </div>
+
+    <div class="grid-2" style="display:grid; grid-template-columns: 1fr; gap: 1rem;">
+      <div class="card">
+        <h2><span class="pill pill-emerald" style="margin:0;">BUILDING</span> What We're Building</h2>
+        <ul>
+          <li>Responsive web app with a high-contrast developer theme.</li>
+          <li>Local engine for Python, Node.js, Git, Docker, CORS and shell errors.</li>
+          <li>Evidence check, command safety check and secret redaction.</li>
+          <li>Optional connector to any LLM provider, with structured output.</li>
+          <li>7 sample errors and an automated test suite.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2><span class="pill pill-cyan" style="margin:0;">DEFERRED</span> Deferred From the POC</h2>
+        <ul>
+          <li>Shell integration that captures failures automatically (<code>errorspeak watch</code>).</li>
+          <li>Saved history of resolved errors.</li>
+          <li>Multi-file repository context for the connected model.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2><span class="pill pill-cyan" style="margin:0;">LATER</span> Possible Later Enhancements</h2>
+        <ul>
+          <li>VS Code / Cursor extension that highlights the fault line in place.</li>
+          <li>Learning from fixes the user confirms worked.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2><span class="pill pill-rose" style="margin:0;">NON-GOAL</span> Non-Goals</h2>
+        <ul>
+          <li>A full terminal emulator in the browser.</li>
+          <li>Running fix commands automatically.</li>
+        </ul>
+      </div>
     </div>
   </div>
 </body>

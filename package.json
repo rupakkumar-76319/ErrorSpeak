@@ -10,10 +10,12 @@
     "test": "node src/engine/test-parser.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
     "canvas-confetti": "^1.9.3",
     "lucide-react": "^0.441.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",

@@ -51,12 +51,26 @@
     <header>
       <span class="badge">DEVPOST LEARN • 2-SCOPE ARTIFACT</span>
       <h1>⚡ ErrorSpeak</h1>
-      <p class="tagline">Intelligent Terminal Triage & Stack Trace Remediation Studio</p>
+      <p class="tagline">A local-first triage tool that turns cryptic terminal errors into a plain-English explanation, the exact line that broke, and a fix that has been checked before you copy it.</p>
     </header>
 
     <div class="card">
       <h2>🎯 The Unique Kernel</h2>
-      <p>A deterministic diagnostic engine that cuts through terminal noise: isolates the exact fault line, scores complexity, translates the error into plain human language, and serves a <strong>1-click copyable shell command / code diff</strong>.</p>
+      <p>Chatbots answer an error with confident prose you can't verify, and sometimes with a command that deletes your work. ErrorSpeak's kernel is <strong>trust</strong>:</p>
+      <ul>
+        <li>A rule-based engine runs in the browser, offline, and says how confident it is.</li>
+        <li>Every claim on the card (error type, file, line, package, quoted code) is checked against the trace you pasted, and anything not found is flagged.</li>
+        <li>Every suggested command passes a safety check that flags destructive or risky commands (<code>rm -rf</code>, <code>git reset --hard</code>, <code>curl | sh</code>, force pushes) before you copy them.</li>
+        <li>For errors the rules don't cover, the user can ask an LLM they connect themselves (Anthropic, OpenAI, Gemini, OpenRouter, Groq, or any OpenAI-compatible server, including a local one). Secrets are stripped from the trace first, the user sees exactly what is sent, and the model's answer goes through the same evidence and safety checks.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🙋 Who It's For</h2>
+      <ul>
+        <li><strong>Primary Persona:</strong> Junior developers, bootcamp students, and self-taught programmers who hit intimidating walls of terminal text (Node.js, Python, Git, Docker) and lose hours guessing or are afraid to ask for help.</li>
+        <li><strong>Alternative Today:</strong> Pasting the trace (often with API keys and passwords still in it) into a search engine or a chatbot, reading outdated forum threads, and trying commands they don't understand.</li>
+      </ul>
     </div>
 
     <div class="card">
@@ -65,42 +79,72 @@
         <div class="flow-steps">
           <div class="step-card">
             <div class="step-num">Step 1</div>
-            <div class="step-title">Paste / Select</div>
-            <div class="step-desc">Developer pastes cryptic error or clicks a 1-click preset.</div>
+            <div class="step-title">Input</div>
+            <div class="step-desc">The developer pastes a terminal error or clicks a sample.</div>
           </div>
           <div class="step-card">
             <div class="step-num">Step 2</div>
-            <div class="step-title">Triage Engine</div>
-            <div class="step-desc">Extracts runtime, isolates line number, computes risk score.</div>
+            <div class="step-title">Analysis</div>
+            <div class="step-desc">The local engine detects the environment, error type, fault line and severity, and reports its confidence.</div>
           </div>
           <div class="step-card">
             <div class="step-num">Step 3</div>
-            <div class="step-title">Remediate</div>
-            <div class="step-desc">Copy-paste shell fix + plain-English "why it works" breakdown.</div>
+            <div class="step-title">Action</div>
+            <div class="step-desc">Plain English · Where it broke (file, line, code) · The fix, its safety rating, and why it works.</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Step 4</div>
+            <div class="step-title">Second opinion</div>
+            <div class="step-desc">If confidence is low, ask the LLM you've connected with your own API key. Secrets are redacted first; the answer is evidence-checked.</div>
           </div>
         </div>
       </div>
+      <p style="margin-top: 0.75rem;"><strong>Outcome:</strong> the developer fixes the error in under a minute without leaking secrets or running something destructive.</p>
+    </div>
+
+    <div class="card">
+      <h2>🎨 Inspiration &amp; Identity</h2>
+      <ul>
+        <li><strong>Aesthetic:</strong> High-contrast developer terminal look (dark slate palette, monospace accents, emerald/amber/rose status colors, violet for the connected LLM).</li>
+        <li><strong>Energy:</strong> Fast, calm and honest, like Raycast or Linear.</li>
+        <li><strong>References:</strong> Raycast, Vercel.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>✅ What "Working" Looks Like</h2>
+      <p>A developer opens the app, pastes a Python <code>KeyError</code> or Node <code>Cannot find module</code> trace (or clicks a sample), and within a fraction of a second sees the environment badge and confidence, a plain-language explanation, the fault line plus "N/N claims found in your trace", and a copyable command with a safety rating and a suggested patch. For an unrecognized error (the Rust sample), the card says the local rules have nothing reliable and offers to ask the connected LLM, with a preview of the redacted text that will be sent.</p>
     </div>
 
     <div class="grid-2">
       <div class="card">
-        <h2><span class="status-pill pill-green">IN POC</span> What We Are Building Now</h2>
+        <h2><span class="status-pill pill-green">IN</span> The POC Boundary (What's In)</h2>
         <ul>
-          <li><strong>CPU-Native Local Stack:</strong> Fast, lightweight Vite + React + Tailwind app.</li>
-          <li><strong>Smart Dual Engine:</strong> Instant offline regex parsing + optional Live AI API hook.</li>
-          <li><strong>5 Preloaded Developer Presets:</strong> Python KeyError, Node Module Error, Docker OOM, Git Conflict, CORS Error.</li>
-          <li><strong>Remediation Card:</strong> 1-click copy button, clean code diff, and plain-English translation.</li>
+          <li>Browser-only web app (Vite + React + Tailwind CSS), no backend.</li>
+          <li>Local rule-based engine for Python, Node.js, Git, Docker, CORS and shell errors, with confidence levels.</li>
+          <li>Evidence check and command safety check on every diagnosis.</li>
+          <li>Optional "Connect any LLM" feature: the user enters their own model name and API key (Anthropic, OpenAI, Gemini, OpenRouter, Groq, or a custom OpenAI-compatible base URL such as a local Ollama server). The key is kept in the browser, the provider is detected from the key prefix or base URL, secret redaction has a preview, and the model's answer goes through the same checks as the local report.</li>
+          <li>7 sample errors, including a secret-leak demo and an error only a connected LLM can handle.</li>
         </ul>
       </div>
 
       <div class="card">
-        <h2><span class="status-pill pill-red">CUT</span> Explicitly Excluded (POC Guardrails)</h2>
+        <h2><span class="status-pill pill-yellow">LATER</span> Post-POC</h2>
         <ul>
-          <li><strong>Heavy Local GPU Weights:</strong> Kept 100% lightweight on CPU for lightning-fast responsiveness.</li>
-          <li><strong>User Authentication & Databases:</strong> Zero setup friction; ready for live video demo.</li>
-          <li><strong>CLI / Browser Extension:</strong> Saved for post-hackathon roadmap.</li>
+          <li>CLI companion (<code>errorspeak run "npm start"</code>) that triages failures automatically.</li>
+          <li>VS Code / Cursor extension.</li>
+          <li>Team knowledge base of resolved errors.</li>
         </ul>
       </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="status-pill pill-red">CUT</span> Explicitly Cut</h2>
+      <ul>
+        <li><strong>User accounts / authentication:</strong> unnecessary for a proof of concept.</li>
+        <li><strong>A hosted backend or proxy for the AI call:</strong> keys would have to pass through our server; bring-your-own-key in the browser keeps the user in control.</li>
+        <li><strong>Running fixes automatically:</strong> the user always reads and copies the command themselves.</li>
+      </ul>
     </div>
   </div>
 </body>

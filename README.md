@@ -1,103 +1,80 @@
-# ⚡ ErrorSpeak
+# ErrorSpeak
 
-> A lightweight, human-first terminal triage studio that translates cryptic stack traces into plain English and hands you 1-click verified fixes.  
-> *Built for the Devpost "Build With AI: Basics" Global Hackathon.*
+> Paste a terminal error. Get a plain-English explanation, the exact line that broke, and a fix that is checked against your trace and for safety before you copy it.
+> Built for the Devpost **Build With AI: Basics** hackathon.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
-[![Devpost Challenge](https://img.shields.io/badge/Devpost-Build%20With%20AI-blue.svg)](https://learn-ai-basics.devpost.com/)
-[![Runtime](https://img.shields.io/badge/Engine-100%25%20CPU%20Local-cyan.svg)](#how-it-works-under-the-hood)
-[![Speed](https://img.shields.io/badge/Triage%20Speed-%3C10ms-purple.svg)](#how-it-works-under-the-hood)
+[![Live demo](https://img.shields.io/badge/demo-GitHub%20Pages-blue.svg)](https://rupakkumar-76319.github.io/ErrorSpeak/)
+
+**Live demo:** https://rupakkumar-76319.github.io/ErrorSpeak/
 
 ---
 
-## 💡 About The Project: Why I Built This
+## The problem
 
-Every developer remembers the sinking feeling of getting a 50-line wall of angry red terminal text late at night. 
+A beginner hits a 50-line wall of red text: `KeyError`, `Cannot find module`, `exited with code 137`. What usually happens next:
 
-Whether you are a beginner learning Python or a junior engineer trying to spin up Docker, cryptic compiler errors (`KeyError`, `ERR_MODULE_NOT_FOUND`, `Exit Code 137`) feel intimidating. Most people end up copying the wall of text into Google or an AI chatbot, wading through 10-year-old StackOverflow threads, and guessing trial-and-error commands in their shell.
+1. They paste it into a search engine or a chatbot, often with an API key or database password still in it.
+2. They get a confident answer they can't check.
+3. They run a command they don't understand. Sometimes it's `git reset --hard` or `rm -rf`.
 
-I wanted to build **ErrorSpeak** to solve that exact friction point. 
+## What ErrorSpeak does
 
-Instead of an endless conversation with a chatbot, ErrorSpeak acts like an instant flight cockpit:
-1. You paste the messy terminal dump (or click a preset).
-2. It strips away the noise and highlights the exact file and line number that broke.
-3. It explains what happened in plain, simple English (no jargon).
-4. It hands you a **1-click copyable terminal command** that fixes the issue—along with an explanation of *why* the fix works.
+| Step | What you see |
+|---|---|
+| **Explain** | What happened in plain English, with a TL;DR for experienced devs. |
+| **Locate** | The file, line and code that failed (innermost frame, not the first one). |
+| **Fix** | A command labelled as a real fix, a code edit or a diagnostic step, plus a before/after patch. |
+| **Check the claims** | "3/3 claims found in your trace": error type, file, line, quoted code and package names are matched against what you pasted. Anything invented is flagged. |
+| **Check the command** | Destructive or risky commands (`rm -rf`, `git reset --hard`, force push, `curl \| sh`, `docker system prune`) are flagged before you copy them. |
+| **Connect any LLM (optional)** | For errors the local rules don't know, ask the LLM you connect — Anthropic, OpenAI, Gemini, OpenRouter, Groq, or any OpenAI-compatible server (including a local one like Ollama) — with your own model name and API key. Secrets are removed first, you can preview exactly what is sent, and the model's answer goes through the same checks. |
 
----
+## How it works
 
-## ⚙️ How It Works (Under the Hood)
+**Local-first.** A rule-based engine in `src/engine/parser.js` handles common Python, Node.js, Git, Docker, CORS and shell errors in the browser, offline, and reports its own confidence. When it has no rule, it says so instead of guessing.
 
-There is a lot of hype around AI right now, but for ErrorSpeak I deliberately chose a **100% CPU-native, deterministic architecture**:
+**AI where it helps.** You choose the model: enter a model name and an API key (or a custom base URL for a local or self-hosted server). `src/engine/providers.js` detects the provider from the key prefix (`sk-ant-` Anthropic, `sk-or-` OpenRouter, `gsk_` Groq, `AIza` Gemini, `sk-` OpenAI) or from the base URL. Anthropic is called directly from the browser through the Anthropic SDK (`src/engine/claude.js`); every other provider is called as an OpenAI-compatible chat-completions endpoint (`src/engine/llm.js`). Both share one contract (`src/engine/triage-schema.js`):
+- **structured output** (a zod schema, enforced server-side for Anthropic and validated client-side for the rest) so the answer always has the same shape as the local report;
+- **verbatim evidence quotes** that the app checks character by character against the trace;
+- **clear error handling** for rejected keys, rate limits, missing models, network/CORS failures and malformed JSON, so a failed request doesn't break the app.
 
-* **Zero External Cloud APIs:** It does not make slow network calls to OpenAI, Claude, or Gemini.
-* **Zero Heavy Databases:** It runs entirely client-side inside your browser in under **10 milliseconds**.
-* **Zero Cost:** No subscription, no API tokens, and it works completely offline (even on airplane mode).
+**Privacy.** `src/engine/redact.js` removes API keys, tokens, JWTs, private keys, connection-string passwords, emails and user-folder names before anything is sent. Your key is stored only in your browser (for the session by default). There is no backend.
 
-### The Architecture:
-* **The Parser Engine (`src/engine/parser.js`):** Uses structural regular expressions to parse compiler grammars across Python tracebacks, Node.js module loaders, Docker container exits, Git conflict markers, and browser CORS policies.
-* **The Knowledge Bank (`src/engine/presets.js`):** Ships with 5 pre-loaded, realistic developer crash scenarios so anyone can test and see the tool in action immediately.
-* **The Developer HUD (`src/components/`):** Built with React 18 and Tailwind CSS, featuring high-contrast dark-mode styling, severity meters, and confetti celebration on verified fixes.
+**Verification.** `src/engine/grounding.js` (evidence check) and `src/engine/safety.js` (command safety check) run on every diagnosis, whether it came from the rules or from the connected LLM.
 
----
+## Try it
 
-## ❓ Frequently Asked Questions (The Architectural Journey)
+The live demo has 7 sample errors. Two show the new ideas:
+- **Postgres Auth (leaks a password):** the trace contains `postgres://admin:<password>@...`. Open "Preview what is sent" to see it replaced with `<PASSWORD>` and the user folder with `<USER>`.
+- **Rust Borrow Error:** the local engine has no rule, says "low confidence", and offers to ask the connected LLM.
 
-Here are the real questions and architectural decisions made while designing this project from scratch:
-
-#### Q1: "Why not just paste the error into ChatGPT or Claude?"
-**A:** Speed, reliability, and friction. 
-An LLM in the cloud takes 2 to 4 seconds to respond, costs money per token, and sometimes hallucinates outdated command flags. ErrorSpeak's local triage engine extracts the error class and fault line in **0.05 milliseconds** with 100% mathematical certainty.
-
-#### Q2: "There are millions of errors in programming. How can you parse them in a millisecond without a massive database?"
-**A:** Because compilers follow strict mathematical grammars. 
-A Python `KeyError` and a custom `DatabaseTimeoutException` share the exact same structural anatomy (PEP 3134 tracebacks). By parsing the *syntax structure* rather than memorizing every error string in existence, the engine extracts the fault line, error class, and trigger condition in linear $O(N)$ time across just a few kilobytes of text.
-
-#### Q3: "Where does the data come from if there is no database?"
-**A:** From two embedded sources in the code:
-1. **Curated Presets (`src/engine/presets.js`):** Embedded JSON objects containing real-world diagnostic patterns for the most common developer errors.
-2. **Dynamic Slot-Filling (`src/engine/parser.js`):** Algorithmic templates that capture specific variables (e.g., catching a missing package name like `express` and dynamically generating `npm install express`).
-
-#### Q4: "Why are there `.agents`, `.claude`, and `agent` folders in this repo?"
-**A:** Those folders contain the **Devpost Learn Hackathon Curriculum** installed via `npx skills add challengepost/learn-ai-basics`. Because different developers use different AI coding environments (Claude Code, Cursor, Copilot), the installer safely created copies in each standard directory so any agent could read the planning guides (`1-start` through `6-ship`). They do not run in the web app, but serve as proof of curriculum compliance.
-
-#### Q5: "How was this project built? What is 'Spec-Driven Development'?"
-**A:** Instead of unstructured "vibe coding" (blindly prompting until code breaks), this project was built using a formal plan-before-you-build process:
-1. 📋 [**Scope Document**](devpost/scope.md) — Isolated the core POC kernel and cut out distractions.
-2. 📐 [**Product Requirements (PRD)**](devpost/prd.md) — Defined screen layouts and user acceptance criteria.
-3. 🛠️ [**Technical Specification**](devpost/spec.md) — Blueprinted the tech stack, component tree, and failure modes.
-4. ✅ [**Build Checklist**](devpost/checklist.md) — Built the app in ordered, mechanically verified slices.
-5. 🗺️ [**Application Map**](devpost/app-map.html) — Visual architectural tour and practices to reuse.
-
----
-
-## 🚀 How to Run It Locally
-
-### Prerequisites
-* [Node.js](https://nodejs.org/) (v18 or v20+ LTS)
-* Git
-
-### Quick Start
+### Run locally
 ```bash
-# 1. Clone the repository
-git clone https://github.com/rupakkumar-76319/errorspeak.git
-cd errorspeak
-
-# 2. Install dependencies
+git clone https://github.com/rupakkumar-76319/ErrorSpeak.git
+cd ErrorSpeak
 npm install
-
-# 3. Start the local server
-npm run dev
+npm run dev        # http://localhost:5173/ErrorSpeak/
+npm test           # engine, redaction, safety, evidence and provider-detection tests (no network)
 ```
+To connect an LLM, click **Connect Any LLM**, enter a model name, and either paste an API key (Anthropic `sk-ant-...`, OpenAI `sk-...`, Gemini `AIza...`, OpenRouter `sk-or-...`, Groq `gsk_...`) or, under Advanced, set a base URL for any OpenAI-compatible server such as a local Ollama instance (`http://localhost:11434/v1`, key optional there).
 
-Open **`http://localhost:5173`** in your browser.
+## Limits (honest list)
+- The local rules cover common beginner errors, not everything. Unknown errors are marked low confidence.
+- The evidence check confirms that a claim appears in your trace; it can't prove a fix is correct.
+- Connecting an LLM needs your own API key (or a reachable base URL) and sends the redacted trace to that provider.
+- Some providers may block direct requests from a browser (CORS); this shows up as a connection error in the AI panel.
+- JSON quality for providers without enforced structured output depends on the model you choose.
+- Providers other than Anthropic were tested only with a stubbed network, not against their live APIs.
 
-### Run Tests
-```bash
-npm test
-```
+## How it was built
+Planned and built with the [Devpost Learn Skill Pack](https://github.com/challengepost/learn-ai-basics) in Claude Code, plan first and then build:
+1. [Scope](devpost/scope.md) — the core idea and what's cut.
+2. [PRD](devpost/prd.md) — screens, behavior and acceptance criteria.
+3. [Spec](devpost/spec.md) — stack, components, data model, failure modes.
+4. [Build checklist](devpost/checklist.md) — ordered slices, each with a mechanical check, plus the revision that added the evidence check, safety check, and the connect-any-LLM feature.
+5. [App map](devpost/app-map.html) — a visual tour of the code.
 
----
+The `.agents/`, `.claude/` and `agent/` folders are the skill pack installed by `npx skills add challengepost/learn-ai-basics` for different coding agents. They are planning guides and are not part of the running app.
 
-## 📄 License
-This project is open-source under the [MIT License](LICENSE).
+## License
+[MIT](LICENSE)

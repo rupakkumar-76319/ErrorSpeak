@@ -23,10 +23,12 @@
     .tagline { color: var(--muted); font-size: 1.05rem; }
     .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
     h2 { font-size: 1.25rem; color: var(--cyan); margin-bottom: 0.85rem; }
+    h3 { font-size: 1rem; color: #fff; margin: 0.9rem 0 0.4rem 0; }
     p, li { color: #d1d5db; font-size: 0.95rem; }
     ul { padding-left: 1.25rem; margin: 0.5rem 0; }
     li { margin-bottom: 0.35rem; }
     pre { background: #060910; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; color: var(--emerald); font-family: monospace; font-size: 0.88rem; }
+    code { background: #060910; color: var(--emerald); padding: 0.15rem 0.35rem; border-radius: 4px; font-family: monospace; font-size: 0.85rem; }
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
     .tech-box { background: #162032; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
     .tech-name { font-weight: bold; color: #fff; font-size: 1rem; margin-bottom: 0.25rem; }
@@ -38,55 +40,170 @@
     <header>
       <span class="badge">DEVPOST LEARN • 4-SPEC ARTIFACT</span>
       <h1>🛠️ ErrorSpeak — Technical Specification</h1>
-      <p class="tagline">System Architecture, Stack Blueprint, and Component Schemas</p>
+      <p class="tagline">A browser-only React app: a local rule-based parser produces a structured triage report and states its confidence; an evidence check and a command safety check run on every report; an optional "Connect any LLM" feature adds a second opinion from the provider the user chooses. No backend.</p>
     </header>
 
     <div class="card">
-      <h2>⚡ Execution Architecture</h2>
-      <p>100% CPU-native architecture running locally in the browser with Vite + React. Zero GPU requirements, sub-millisecond triage parsing, zero cloud cost.</p>
+      <h2>⚡ How This Works, In Plain Language</h2>
+      <p>When the user pastes an error or picks a sample, a local rule-based parser turns it into a structured triage report and states its confidence. Two checks run on every report: an evidence check that looks for each claim in the original trace, and a safety check that rates the suggested command. If the user connects an LLM of their choice (a model name plus an API key, or a custom base URL), they can ask it for a diagnosis: the trace is redacted in the browser, sent directly to that provider, and the structured answer is shown with the same checks.</p>
       <div class="grid-3" style="margin-top: 1rem;">
         <div class="tech-box">
-          <div class="tech-name">Vite + React 18/19</div>
-          <div class="tech-desc">Ultra-fast compilation and reactive component updates.</div>
-        </div>
-        <div class="tech-box">
-          <div class="tech-name">Tailwind CSS</div>
-          <div class="tech-desc">Developer dark-mode styling with zero runtime overhead.</div>
+          <div class="tech-name">Vite 5 + React 18</div>
+          <div class="tech-desc">Build tool and UI, with Tailwind CSS 3, Lucide icons and canvas-confetti.</div>
         </div>
         <div class="tech-box">
           <div class="tech-name">Deterministic Triage Engine</div>
-          <div class="tech-desc">Pattern matcher for Python, Node, Git, Docker, and CORS errors.</div>
+          <div class="tech-desc">One rule-based parser per environment: Python, Node.js, Git, Docker, CORS, Shell, plus a generic low-confidence fallback.</div>
+        </div>
+        <div class="tech-box">
+          <div class="tech-name">@anthropic-ai/sdk + zod</div>
+          <div class="tech-desc">Anthropic goes through its SDK; every other provider is reached via an OpenAI-compatible endpoint, both validated with the same zod schema.</div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h2>📂 Application File Structure</h2>
-      <pre>
-M:\build-with-ai-project\
-├── devpost/               # Devpost hackathon artifacts (scope, prd, spec)
-├── src/
-│   ├── components/
-│   │   ├── Header.jsx        # Branding and system badges
-│   │   ├── PresetRibbon.jsx  # One-click demo error chips
-│   │   ├── TerminalInput.jsx # Monospace input editor
-│   │   └── TriageCard.jsx    # Diagnostic report & copyable fix
-│   ├── engine/
-│   │   ├── parser.js         # Local CPU triage regex engine
-│   │   └── presets.js        # 5 preloaded error scenarios
-│   ├── App.jsx               # Root workstation coordinator
-│   ├── index.css             # Tailwind base and theme variables
-│   └── main.jsx              # React mounting root
-├── index.html
-├── package.json
-└── vite.config.js
-      </pre>
+      <h2>🚶 The Core Journey Through the System</h2>
+      <ul>
+        <li>The user clicks a chip in <code>PresetRibbon</code> or types into <code>TerminalInput</code>; <code>detectEnvironment</code> updates the badge live.</li>
+        <li><code>App.jsx</code> calls <code>engine/parser.js &gt; parseError(text)</code>, which returns a <code>TriageReport</code> with <code>source: "local"</code>.</li>
+        <li><code>TriageCard.jsx</code> shows the report and runs <code>engine/grounding.js &gt; groundReport(report, rawText)</code> and <code>engine/safety.js &gt; lintCommand(fixCommand)</code>.</li>
+        <li><code>AIPanel.jsx</code> runs <code>engine/redact.js &gt; redactSecrets(rawText)</code> and shows the count and preview. On click, <code>App.jsx</code> lazy-loads <code>engine/llm.js</code> and calls <code>analyzeWithLLM({ config, redactedText, localReport })</code>, where <code>config</code> is <code>{ model, apiKey, baseUrl }</code>.</li>
+        <li><code>engine/providers.js &gt; detectProvider(config)</code> reads the key prefix (or a base URL) to pick Anthropic, OpenAI, Gemini, OpenRouter, Groq, or a custom server. Anthropic goes to <code>engine/claude.js</code>; everything else goes through <code>engine/llm.js</code>'s own request, both built on the shared contract in <code>engine/triage-schema.js</code>.</li>
+        <li>The response is a <code>TriageReport</code> with <code>source: "ai"</code>, plus <code>provider</code> and <code>model</code> fields, and <code>evidence</code> quotes. The view switch (labelled with the model name) lets the user compare it with the local report; both go through the same checks.</li>
+        <li>The copy button writes the command to the clipboard; confetti only fires when the command is not destructive.</li>
+      </ul>
     </div>
 
     <div class="card">
-      <h2>🚀 How to Run</h2>
-      <pre>npm run dev</pre>
-      <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted);">Opens at <code>http://localhost:5173</code> in your local browser.</p>
+      <h2>🎨 Look and Feel</h2>
+      <ul>
+        <li><strong>Palette:</strong> <code>#070B14</code> background, slate-900/950 cards, slate-800 borders.</li>
+        <li><strong>Accents:</strong> cyan (diagnosis), emerald (safe/verified), amber (caution/unverified), rose (errors/destructive), violet (the connected LLM).</li>
+        <li><strong>Fonts:</strong> Fira Code for terminal content; Inter for explanations.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🧩 Components</h2>
+      <h3>Header.jsx</h3>
+      <p>Brand, "Local-first · works offline" badge, "Connect Any LLM" button that opens the settings modal and shows connection state (<code>LLM: &lt;model&gt;</code> once connected), source link.</p>
+      <h3>PresetRibbon.jsx</h3>
+      <p>Renders the sample chips from <code>engine/presets.js</code>. Clicking one fills the editor and runs triage.</p>
+      <h3>TerminalInput.jsx</h3>
+      <p>Monospace editor with line numbers, live environment badge, clear button, run button and Ctrl+Enter shortcut.</p>
+      <h3>TriageCard.jsx</h3>
+      <p>Header (environment, error type, severity, Plain English / TL;DR), provenance strip (source — local engine, or <code>&lt;provider&gt; · &lt;model&gt;</code> — confidence, evidence score), explanation, fault location and code, fix box labelled by <code>fixKind</code> with safety rating and "why this works", patch preview, and the collapsible evidence list.</p>
+      <h3>AIPanel.jsx</h3>
+      <p>Explains when the connected LLM is useful (highlighted on low confidence), shows redaction counts by type and a preview of the exact text sent, the "Ask &lt;model&gt;" / "Connect an LLM to enable" button, loading state and errors.</p>
+      <h3>SettingsModal.jsx</h3>
+      <p>Model-name field, password-type API key field, a collapsed "Advanced" section for a base URL, a detected-provider line, "remember on this device" checkbox (localStorage, otherwise sessionStorage), privacy note, disconnect button.</p>
+    </div>
+
+    <div class="card">
+      <h2>⚙️ Engine Modules</h2>
+      <ul>
+        <li><code>parser.js</code> — <code>detectEnvironment(text)</code> and <code>parseError(text)</code>; one parser per environment (Python, Node.js, Git, Docker, CORS, Shell) plus a generic low-confidence fallback.</li>
+        <li><code>presets.js</code> — the 7 sample inputs (raw text only).</li>
+        <li><code>grounding.js</code> — <code>groundReport(report, rawText)</code> → <code>{ checks[], verified, total }</code>.</li>
+        <li><code>safety.js</code> — <code>lintCommand(cmd)</code> → <code>{ level: "safe" | "caution" | "danger" | "none", reasons[] }</code>.</li>
+        <li><code>redact.js</code> — <code>redactSecrets(text)</code> → <code>{ text, findings[] }</code>.</li>
+        <li><code>providers.js</code> — <code>PROVIDERS</code> (label, default base URL, example model id) and <code>detectProvider({ apiKey, baseUrl })</code>, which checks the key prefix or falls back to <code>"custom"</code> when a base URL is set.</li>
+        <li><code>triage-schema.js</code> — the contract shared by every provider: <code>TriageSchema</code> (zod), <code>SYSTEM_PROMPT</code>, <code>JSON_INSTRUCTIONS</code>, <code>buildUserMessage(...)</code>, and <code>toReport(r, { provider, model })</code>.</li>
+        <li><code>claude.js</code> — <code>analyzeWithClaude({ apiKey, model, redactedText, localReport })</code>; calls the Anthropic SDK with <code>betaZodOutputFormat(TriageSchema)</code>; lazy-loaded so the SDK is not in the initial bundle.</li>
+        <li><code>llm.js</code> — <code>analyzeWithLLM({ config, redactedText, localReport })</code>; the dispatcher. Routes Anthropic to <code>claude.js</code>; every other provider is called directly as <code>POST {base}/chat/completions</code> with <code>response_format: json_object</code>, then validated with <code>TriageSchema.safeParse</code>.</li>
+        <li><code>test-parser.js</code> — assertion-based test suite run by <code>npm test</code>, including provider-detection cases.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>📐 Data Model</h2>
+      <pre>interface TriageReport {
+  id: string;
+  source: "local" | "ai";
+  provider?: string;                    // AI reports only, e.g. "Anthropic (Claude)", "OpenAI"
+  model?: string;                       // AI reports only, the user-chosen model name
+  environment: string;                  // "Python" | "Node.js" | "Git" | "Docker" | "Web / Network" | "PowerShell / Shell" | ...
+  errorType: string;
+  severity: number;                     // 1 to 10
+  confidence: "high" | "medium" | "low";
+  location: string;                     // "file:line", or a short description
+  offendingCode: string;
+  plainExplanation: string;
+  rootCause: string;
+  fixKind: "shell" | "code" | "diagnose";
+  fixCommand: string;                   // empty when there is no reliable fix
+  whyItWorks: string;
+  fixDiff: { before: string; after: string } | null;
+  evidence?: string[];                  // verbatim quotes from the trace (AI reports)
+  timestamp: string;
+}</pre>
+    </div>
+
+    <div class="card">
+      <h2>🌐 External Services and Dependencies</h2>
+      <p>Provider is user-chosen; no default model is assumed. The user supplies both a model name and an API key (or a base URL), and <code>detectProvider</code> picks the provider from that input.</p>
+      <p><strong>Anthropic:</strong> called from the browser with the user's own key through <code>@anthropic-ai/sdk</code> (<code>dangerouslyAllowBrowser: true</code>, which sends the <code>anthropic-dangerous-direct-browser-access</code> header). Request settings:</p>
+      <ul>
+        <li><code>output_config.effort: "low"</code> only on models that support it (triage is a short task; keeps answers fast when available);</li>
+        <li>structured output via <code>betaZodOutputFormat(TriageSchema)</code> so the response always parses into a <code>TriageReport</code>;</li>
+        <li>server-side fallback (<code>fallbacks: "default"</code>, beta <code>server-side-fallback-2026-07-01</code>) only on <code>claude-opus-5</code> / <code>fable</code> models, so a classifier refusal is retried on a fallback model;</li>
+        <li><code>stop_reason</code> checked for <code>refusal</code> and <code>max_tokens</code> before the parsed output is used.</li>
+      </ul>
+      <p><strong>OpenAI, Gemini, OpenRouter, Groq, and any custom OpenAI-compatible server:</strong> called directly as <code>POST {base}/chat/completions</code> with <code>response_format: { type: "json_object" }</code>, the system prompt plus an explicit JSON field list, and the response validated with <code>TriageSchema.safeParse</code>. Errors are mapped to readable messages for 401/403 (key rejected), 404 (model or endpoint not found), 429 (rate limited), a network/CORS failure, invalid JSON, or the wrong JSON shape.</p>
+      <p>The app works fully without any key or model connected.</p>
+    </div>
+
+    <div class="card">
+      <h2>⚠️ Important Failure Modes</h2>
+      <ul>
+        <li><strong>Unrecognized input:</strong> low confidence, no fix command, the AI panel highlighted.</li>
+        <li><strong>Invalid key / rate limit / model not found / network or CORS failure / invalid or wrong-shaped JSON:</strong> a readable message in the AI panel; the local report stays visible.</li>
+        <li><strong>Storage blocked (private mode):</strong> the settings are kept in memory for the tab.</li>
+        <li><strong>The connected model claims something not in the trace:</strong> marked "not found" in the evidence check and the evidence list opens automatically.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🔒 Security and Privacy</h2>
+      <ul>
+        <li>The key never leaves the browser except in requests to the chosen provider (or the user's own base URL).</li>
+        <li>Redaction runs before every request and the user can preview the payload.</li>
+        <li>Nothing is executed automatically; destructive commands are flagged and lose the confetti.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>✂️ What Was Simplified and Why</h2>
+      <ul>
+        <li><strong>Rules instead of a local model:</strong> instant, offline and predictable on any machine; the connected LLM handles what the rules can't.</li>
+        <li><strong>Browser-direct API calls instead of a proxy:</strong> no server to run or secure for a proof of concept; the trade-off is that users bring their own key and the browser must reach the provider directly.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>📋 Limits (Honest List)</h2>
+      <ul>
+        <li>Some providers may block direct browser requests (CORS); the AI panel reports this as a connection failure rather than hanging.</li>
+        <li>JSON quality for providers without schema enforcement depends on the model chosen; a weaker model can return the wrong shape, which is caught and reported, not silently accepted.</li>
+        <li>Providers other than Anthropic were exercised only through tests with a stubbed network, not against their live APIs.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🚀 Where It Runs and How Someone Tries It</h2>
+      <p><strong>Live:</strong> <a href="https://rupakkumar-76319.github.io/ErrorSpeak/" style="color: var(--cyan);">https://rupakkumar-76319.github.io/ErrorSpeak/</a></p>
+      <pre>npm install
+npm run dev</pre>
+      <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted);">Opens at <code>http://localhost:5173/ErrorSpeak/</code>. Run <code>npm test</code> for the engine, redaction, safety, evidence and provider-detection checks (no network). Any browser; no GPU required.</p>
+    </div>
+
+    <div class="card">
+      <h2>🧭 Decisions and Open Issues</h2>
+      <ul>
+        <li>A standalone browser app keeps the demo reliable and reviewers need nothing installed.</li>
+        <li>Open: a CLI that pipes failing commands into the same engine.</li>
+      </ul>
     </div>
   </div>
 </body>

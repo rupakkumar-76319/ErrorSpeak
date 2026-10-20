@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ErrorSpeak — Application Map & Architectural Reference</title>
+  <title>ErrorSpeak — Application Map &amp; Architectural Reference</title>
   <style>
     :root {
       --bg: #0b0f19;
@@ -41,69 +41,91 @@
     <header>
       <span class="badge">DEVPOST LEARN • 5-BUILD WRAP-UP</span>
       <h1>🗺️ ErrorSpeak — Application Map</h1>
-      <p class="tagline">Interactive Code Tour, Architectural Stops, and Practices to Reuse</p>
+      <p class="tagline">Code Tour, Architectural Stops, and a Practice to Reuse</p>
     </header>
 
     <div class="card">
       <h2>⚡ What ErrorSpeak Does</h2>
-      <p>ErrorSpeak is a CPU-native, sub-100ms terminal triage console. It ingests cryptic stack traces (Python, Node.js, Git, Docker, Web), runs local pattern decomposition, and outputs a plain-English explanation alongside a 1-click verified terminal remediation command.</p>
+      <p>ErrorSpeak is a browser-only React app that turns a pasted or sample terminal error into a structured triage report: environment, error type, severity, the exact fault line, a plain-English explanation and a suggested fix. A local rule-based engine (Python, Node.js, Git, Docker, CORS, Shell) handles the diagnosis offline, states its own confidence, and says so honestly when no rule matches. Every report, whether from the local rules or from a connected LLM, is run through an evidence check (are the claims actually in the trace?) and a command safety check (is the fix command destructive?) before the user sees it. Connecting an LLM is optional and works with any provider the user chooses — Anthropic, OpenAI, Gemini, OpenRouter, Groq, or a custom OpenAI-compatible server; it redacts secrets first, and shows the user exactly what will be sent.</p>
     </div>
 
     <div class="card">
-      <h2>🔄 Data & Execution Flow</h2>
+      <h2>🔄 Data &amp; Execution Flow</h2>
       <div class="diagram-container">
         <svg viewBox="0 0 760 140" width="100%" height="140" xmlns="http://www.w3.org/2000/svg">
           <!-- Step 1 -->
-          <rect x="20" y="30" width="180" height="80" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
-          <text x="110" y="65" fill="#38bdf8" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">1. USER INPUT</text>
-          <text x="110" y="85" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Preset or Raw Trace</text>
+          <rect x="10" y="30" width="170" height="80" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+          <text x="95" y="60" fill="#38bdf8" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">1. INPUT</text>
+          <text x="95" y="78" fill="#94a3b8" font-family="sans-serif" font-size="10" text-anchor="middle">Preset click or</text>
+          <text x="95" y="92" fill="#94a3b8" font-family="sans-serif" font-size="10" text-anchor="middle">pasted trace</text>
 
           <!-- Arrow 1 -->
-          <path d="M 200 70 L 270 70" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
-          
+          <path d="M 180 70 L 220 70" stroke="#64748b" stroke-width="2"/>
+
           <!-- Step 2 -->
-          <rect x="280" y="30" width="190" height="80" rx="8" fill="#1e293b" stroke="#34d399" stroke-width="2"/>
-          <text x="375" y="65" fill="#34d399" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">2. TRIAGE ENGINE</text>
-          <text x="375" y="85" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Regex &amp; Heuristic Parser</text>
+          <rect x="225" y="30" width="170" height="80" rx="8" fill="#1e293b" stroke="#34d399" stroke-width="2"/>
+          <text x="310" y="60" fill="#34d399" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">2. LOCAL ENGINE</text>
+          <text x="310" y="78" fill="#94a3b8" font-family="sans-serif" font-size="10" text-anchor="middle">parser.js parses</text>
+          <text x="310" y="92" fill="#94a3b8" font-family="sans-serif" font-size="10" text-anchor="middle">a TriageReport</text>
 
           <!-- Arrow 2 -->
-          <path d="M 470 70 L 540 70" stroke="#64748b" stroke-width="2"/>
+          <path d="M 395 70 L 435 70" stroke="#64748b" stroke-width="2"/>
 
           <!-- Step 3 -->
-          <rect x="550" y="30" width="190" height="80" rx="8" fill="#1e293b" stroke="#a78bfa" stroke-width="2"/>
-          <text x="645" y="65" fill="#a78bfa" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">3. REMEDIATION HUD</text>
-          <text x="645" y="85" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Plain Translation + Fix</text>
+          <rect x="440" y="30" width="170" height="80" rx="8" fill="#1e293b" stroke="#fbbf24" stroke-width="2"/>
+          <text x="525" y="60" fill="#fbbf24" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">3. CHECKS</text>
+          <text x="525" y="78" fill="#94a3b8" font-family="sans-serif" font-size="10" text-anchor="middle">grounding.js +</text>
+          <text x="525" y="92" fill="#94a3b8" font-family="sans-serif" font-size="10" text-anchor="middle">safety.js in TriageCard</text>
+
+          <!-- Arrow 3 -->
+          <path d="M 610 70 L 650 70" stroke="#64748b" stroke-width="2"/>
+
+          <!-- Step 4 -->
+          <rect x="655" y="30" width="95" height="80" rx="8" fill="#1e293b" stroke="#a78bfa" stroke-width="2"/>
+          <text x="702" y="56" fill="#a78bfa" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">4. ANY LLM</text>
+          <text x="702" y="74" fill="#94a3b8" font-family="sans-serif" font-size="9" text-anchor="middle">optional,</text>
+          <text x="702" y="86" fill="#94a3b8" font-family="sans-serif" font-size="9" text-anchor="middle">redacted</text>
         </svg>
       </div>
+      <p style="font-size: 0.88rem; color: var(--muted);">The local path (steps 1–3) always runs and never leaves the browser. Step 4 only runs if the user has connected a model (any provider) and clicks "Ask &lt;model&gt;"; its answer goes back through the same checks in step 3.</p>
     </div>
 
     <div class="card">
-      <h2>📍 3-Stop Code Tour</h2>
-      
+      <h2>📍 Code Tour</h2>
+
       <div class="route-step">
         <div class="route-num">Stop 1 • Entry Point</div>
-        <div class="route-title">Terminal Editor &amp; Preset Trigger</div>
-        <div class="route-file">src/components/TerminalInput.jsx &amp; src/components/PresetRibbon.jsx</div>
+        <div class="route-title">Terminal Editor &amp; App Coordinator</div>
+        <div class="route-file">src/components/TerminalInput.jsx &amp; src/App.jsx</div>
         <p style="font-size: 0.88rem; color: #94a3b8; margin-top: 0.3rem;">
-          Captures developer keystrokes or one-click preset selection. Triggers automatic runtime environment detection.
+          The monospace editor captures pasted text or a preset click and shows the live environment badge. <code>App.jsx</code> holds the app's state (input, reports, AI status, LLM connection config) and calls <code>parseError(text)</code> on "Run Triage Engine" or Ctrl+Enter.
         </p>
       </div>
 
       <div class="route-step">
         <div class="route-num">Stop 2 • The Triage Kernel</div>
-        <div class="route-title">Deterministic Parser &amp; Heuristic Matcher</div>
-        <div class="route-file">src/engine/parser.js &amp; src/engine/presets.js</div>
+        <div class="route-title">Deterministic, Honest Parser</div>
+        <div class="route-file">src/engine/parser.js</div>
         <p style="font-size: 0.88rem; color: #94a3b8; margin-top: 0.3rem;">
-          Decomposes stack traces into structured JSON: isolates offending file, line number, plain English translation, and verified shell commands.
+          <code>detectEnvironment()</code> and <code>parseError()</code> turn the raw trace into a structured <code>TriageReport</code>: the innermost Python frame, the first non-internal Node frame, real pip/npm package names, severity, confidence and a <code>fixKind</code> of "shell", "code" or "diagnose". When nothing matches, it returns low confidence and no fix instead of guessing.
         </p>
       </div>
 
       <div class="route-step">
-        <div class="route-num">Stop 3 • Remediation Card</div>
-        <div class="route-title">Interactive HUD &amp; 1-Click Clipboard Action</div>
-        <div class="route-file">src/components/TriageCard.jsx</div>
+        <div class="route-num">Stop 3 • Checks Before Trust</div>
+        <div class="route-title">Evidence Check and Command Safety, Rendered in the Card</div>
+        <div class="route-file">src/engine/grounding.js &amp; src/engine/safety.js, used by src/components/TriageCard.jsx</div>
         <p style="font-size: 0.88rem; color: #94a3b8; margin-top: 0.3rem;">
-          Renders severity meters, fault highlights, plain English vs TL;DR toggles, and handles copy-to-clipboard with confetti feedback.
+          <code>TriageCard.jsx</code> calls <code>groundReport(report, rawText)</code> to match each claim (error type, location, quoted code, package name) against the original trace, and <code>lintCommand(fixCommand)</code> to rate the fix safe, caution or danger. The card shows "N/N claims found in your trace", the safety banner, and opens the evidence list automatically when something isn't verified.
+        </p>
+      </div>
+
+      <div class="route-step">
+        <div class="route-num">Stop 4 • The Optional Second Opinion</div>
+        <div class="route-title">Redaction and the Connect-Any-LLM Dispatcher</div>
+        <div class="route-file">src/engine/redact.js &amp; src/engine/claude.js, via src/components/AIPanel.jsx</div>
+        <p style="font-size: 0.88rem; color: #94a3b8; margin-top: 0.3rem;">
+          <code>AIPanel.jsx</code> runs <code>redactSecrets(rawText)</code> and shows what will be hidden, with a preview. On "Ask &lt;model&gt;", <code>App.jsx</code> lazy-loads <code>engine/llm.js</code>, which calls <code>detectProvider()</code> (from <code>engine/providers.js</code>) to route Anthropic to <code>engine/claude.js</code> (the Anthropic SDK with a zod schema) or any other provider to its own OpenAI-compatible request. Either path returns a <code>TriageReport</code> with <code>source: "ai"</code>, a <code>provider</code>, a <code>model</code>, and verbatim evidence quotes, so it goes through Stop 3's checks exactly like a local report.
         </p>
       </div>
     </div>
@@ -111,21 +133,30 @@
     <div class="card">
       <h2>🛠️ To Change This, Start Here</h2>
       <ul>
-        <li><strong>To add a new preset error:</strong> Add a new entry to <code>ERROR_PRESETS</code> in <code>src/engine/presets.js</code>.</li>
-        <li><strong>To customize triage heuristics:</strong> Edit <code>parseError()</code> in <code>src/engine/parser.js</code>.</li>
-        <li><strong>To adjust HUD colors or fonts:</strong> Update classes in <code>src/components/TriageCard.jsx</code> and <code>src/index.css</code>.</li>
+        <li><strong>To add a new sample error:</strong> add an entry to <code>ERROR_PRESETS</code> in <code>src/engine/presets.js</code> (raw text only; it runs through the real parser).</li>
+        <li><strong>To change triage logic for an environment:</strong> edit the matching function in <code>src/engine/parser.js</code> (e.g. <code>parsePython</code>, <code>parseNode</code>, <code>parseGit</code>, <code>parseDocker</code>, <code>parseCors</code>, <code>parseShell</code>).</li>
+        <li><strong>To change what counts as evidence:</strong> edit <code>groundReport()</code> in <code>src/engine/grounding.js</code>.</li>
+        <li><strong>To change what counts as a dangerous or risky command:</strong> edit the <code>DANGER</code> / <code>CAUTION</code> rule lists in <code>src/engine/safety.js</code>.</li>
+        <li><strong>To change what gets redacted before an AI request:</strong> edit the <code>RULES</code> list in <code>src/engine/redact.js</code>.</li>
+        <li><strong>To add or change a provider:</strong> edit <code>PROVIDERS</code> and <code>detectProvider()</code> in <code>src/engine/providers.js</code>.</li>
+        <li><strong>To change the shared prompt, JSON schema, or report shape:</strong> <code>src/engine/triage-schema.js</code> (used by both <code>claude.js</code> and <code>llm.js</code>).</li>
+        <li><strong>To change Anthropic-specific request behavior (effort, fallback models):</strong> the <code>SUPPORTS_EFFORT</code> / <code>SUPPORTS_FALLBACK</code> patterns in <code>src/engine/claude.js</code>.</li>
+        <li><strong>To change how non-Anthropic providers are called:</strong> <code>src/engine/llm.js</code>.</li>
+        <li><strong>To verify a change:</strong> add or update an assertion in <code>src/engine/test-parser.js</code> and run <code>npm test</code>.</li>
       </ul>
     </div>
 
     <div class="card">
       <h2>💡 A Practice to Reuse</h2>
-      <p><strong>The "Deterministic Dual-Engine" Pattern:</strong> For AI-powered developer tools and hackathon demos, never rely solely on cloud APIs that can suffer from latency, rate limits, or connectivity issues. Building a smart client-side heuristic engine with instant offline presets ensures your app is 100% reliable during high-stakes pitches and live video recordings.</p>
+      <p><strong>Verify instead of trust:</strong> whenever an app (rule-based or AI-powered) produces a confident-sounding diagnosis, don't just render it — check it against the source material first, and show the user which claims passed and which didn't. In ErrorSpeak, <code>grounding.js</code> does this for every report regardless of whether it came from the local parser or from whichever LLM the user connected, so an invented file name, package or quote gets flagged "not found" instead of being presented as fact. The same pattern (local engine first, any LLM as a fallback behind one shared schema, and a check that runs on both) transfers to any tool that mixes deterministic logic with an LLM call.</p>
     </div>
 
     <div class="card">
       <h2>🚀 How to Run</h2>
-      <pre>npm run dev</pre>
-      <p style="font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem;">Running live at: <code>http://localhost:5173</code></p>
+      <pre>npm install
+npm run dev</pre>
+      <p style="font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem;">Open <code>http://localhost:5173/ErrorSpeak/</code>. Run <code>npm test</code> for the engine, redaction and safety test suite (no network).</p>
+      <p style="font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem;">Live demo: <a href="https://rupakkumar-76319.github.io/ErrorSpeak/" style="color: var(--cyan);">https://rupakkumar-76319.github.io/ErrorSpeak/</a></p>
     </div>
   </div>
 </body>
