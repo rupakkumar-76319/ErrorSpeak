@@ -97,7 +97,7 @@ export default function App() {
   const shownReport = view === 'ai' && aiReport ? aiReport : localReport;
 
   return (
-    <div className="min-h-screen bg-[#070B14] text-slate-100 flex flex-col font-sans selection:bg-cyan-500/30">
+    <div className="min-h-screen bg-page text-slate-100 flex flex-col font-sans selection:bg-cyan-500/30">
       <Header modelName={llm.model} onOpenSettings={() => setShowSettings(true)} />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 flex flex-col gap-5">
@@ -131,7 +131,7 @@ export default function App() {
                     </button>
                     <button
                       onClick={() => setView('ai')}
-                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg ${view === 'ai' ? 'bg-violet-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg ${view === 'ai' ? 'bg-violet-600 text-on-accent' : 'text-slate-400 hover:text-slate-200'}`}
                     >
                       <Sparkles className="w-3.5 h-3.5" /> {aiReport.model}
                     </button>
@@ -178,7 +178,11 @@ export default function App() {
       </main>
 
       <footer className="border-t border-slate-800/80 bg-slate-950/60 py-3 text-center text-xs font-mono text-slate-500">
-        ErrorSpeak · local-first error triage · built for Devpost Build With AI: Basics
+        ErrorSpeak · local-first error triage ·{' '}
+        <a href="https://github.com/rupakkumar-76319/ErrorSpeak/blob/main/eval/RESULTS.md" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-cyan-300 underline-offset-2 hover:underline">
+          50/52 correct on unseen real GitHub errors
+        </a>{' '}
+        · built for Devpost Build With AI: Basics
       </footer>
 
       {showSettings && (

@@ -14,7 +14,7 @@ const RULES = [
   { label: 'Connection string password', pattern: /(\b[a-z][a-z0-9+.\-]*:\/\/[^\s:/@]+:)[^\s@/]+(@)/gi, replace: '$1<PASSWORD>$2' },
   { label: 'Secret assignment', pattern: /(\b(?:password|passwd|pwd|secret|api[_-]?key|access[_-]?token|auth[_-]?token|client[_-]?secret)\b\s*[=:]\s*["']?)[^\s"',;]{4,}/gi, replace: '$1<REDACTED>' },
   { label: 'Email address', pattern: /\b[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}\b/g, replace: '<EMAIL>' },
-  { label: 'Windows user folder', pattern: /([A-Za-z]:\\{1,2}Users\\{1,2})(?!<USER>)[^\\\s"'<>]+/gi, replace: '$1<USER>' },
+  { label: 'Windows user folder', pattern: /([A-Za-z]:[\\/]{1,2}Users[\\/]{1,2})(?!<USER>)[^\\/\s"'<>]+/gi, replace: '$1<USER>' },
   { label: 'Home folder', pattern: /(\/(?:home|Users)\/)(?!<USER>)[^/\s"'<>]+/g, replace: '$1<USER>' },
 ];
 

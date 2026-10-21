@@ -35,6 +35,7 @@ A single developer studio surface:
 * **LLM Settings Modal:** a model-name field and a password-type API key field, a collapsed "Advanced" section for a base URL (any OpenAI-compatible server, e.g. Ollama at `http://localhost:11434/v1`, where the key is optional), a detected-provider line, "remember on this device" option, privacy note, disconnect button.
 
 ## Look and Feel
+* **Themes:** dark and light, switched from the header; follows the system setting by default.
 * **Palette:** deep slate dark mode (`#070B14`, slate-900/950 cards) with high-contrast text.
 * **Accents:** cyan for diagnosis, emerald for safe or verified, amber for caution or unverified, rose for errors and destructive commands, violet for the connected LLM.
 * **Typography:** Fira Code for terminal content, Inter for explanations.
@@ -57,6 +58,7 @@ Source: `scope.md > The Unique Kernel`.
 - *Acceptance Criteria:*
   - [x] All 7 samples produce the expected error type, location and fix (`npm test`).
   - [x] Unrecognized input shows low confidence and points to the AI panel.
+  - [x] On 52 unseen real GitHub-issue errors, environment, error type and location are all correct for 50, and only 1 of 67 answers is confident but wrong (`npm run eval`).
 
 ### Evidence Check
 Source: `scope.md > The Unique Kernel`.

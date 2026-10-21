@@ -23,6 +23,7 @@ export default function PresetRibbon({ activePresetId, onSelectPreset }) {
             <button
               key={preset.id}
               onClick={() => onSelectPreset(preset)}
+              aria-pressed={isActive}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono transition-all border ${
                 isActive
                   ? 'bg-cyan-500/20 border-cyan-500/80 text-cyan-200 shadow-md shadow-cyan-500/10'

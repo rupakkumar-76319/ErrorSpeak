@@ -1,0 +1,557 @@
+[
+  {
+    "id": "python-001",
+    "environment": "Python",
+    "errorType": "KeyError",
+    "location": ".../whosaid-1.6.0/lib/workspace.py:1913",
+    "traceUsable": true
+  },
+  {
+    "id": "python-002",
+    "environment": "Python",
+    "errorType": "KeyError",
+    "location": "/usr/local/lib/python3.14/site-packages/electrasmart/device/__init__.py:20",
+    "traceUsable": true,
+    "notes": "Second traceback is cut off after config_entries.py:803 with no exception; labeled from last complete traceback."
+  },
+  {
+    "id": "python-003",
+    "environment": "Python",
+    "errorType": "KeyError",
+    "location": "/tmp/capstone/miniproject1/miniproject.py:37",
+    "traceUsable": true
+  },
+  {
+    "id": "python-004",
+    "environment": "Python",
+    "errorType": "KeyError",
+    "location": "serve/server.py:801",
+    "traceUsable": true
+  },
+  {
+    "id": "python-005",
+    "environment": "Python",
+    "errorType": "RuntimeError",
+    "location": "/usr/lib/enigma2/python/StartEnigma.py:174",
+    "traceUsable": true,
+    "notes": "Enigma2 log wrapped in HTML fragments."
+  },
+  {
+    "id": "python-006",
+    "environment": "Python",
+    "errorType": "ImportError",
+    "location": "<frozen importlib._bootstrap>:491",
+    "traceUsable": true,
+    "notes": "Chained: ModuleNotFoundError 'roboplan.simple_ik' is the cause; last printed is ImportError. Innermost frame is frozen importlib."
+  },
+  {
+    "id": "python-007",
+    "environment": "Python",
+    "errorType": "ModuleNotFoundError",
+    "location": "/usr/share/eartag/eartag/utils/validation.py:4",
+    "traceUsable": true
+  },
+  {
+    "id": "python-008",
+    "environment": "Python",
+    "errorType": "RuntimeError",
+    "location": "D:\\apps\\SD-WebUI\\ComfyUI\\custom_nodes\\WTiVo-WatertightVoxel-ComfyuiNode\\inprocess.py:118",
+    "traceUsable": true,
+    "notes": "Real failure is in a C++/CUDA subprocess; earlier tracebacks in wtivo.py."
+  },
+  {
+    "id": "python-009",
+    "environment": "Python",
+    "errorType": "ModuleNotFoundError",
+    "location": "/home/<USER>/PSBBN-Definitive-Project/scripts/helper/list-builder.py:29",
+    "traceUsable": false,
+    "notes": "Exception message empty/truncated after 'ModuleNotFoundError:'; module inferable as lz4 from the import line."
+  },
+  {
+    "id": "python-010",
+    "environment": "Python",
+    "errorType": "ModuleNotFoundError",
+    "location": "/home/<USER>/work/my-userbot/my-userbot/tests/test_epic_smoke.py:2",
+    "traceUsable": true,
+    "notes": "unittest wraps it as ImportError: Failed to import test module."
+  },
+  {
+    "id": "python-011",
+    "environment": "Python",
+    "errorType": "AttributeError",
+    "location": "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/unittest/mock.py:1183",
+    "traceUsable": true,
+    "notes": "Multiple unittest errors; final traceback (test line 60) is truncated without exception, labeled from last complete one. Mock side_effect=AttributeError."
+  },
+  {
+    "id": "python-012",
+    "environment": "Python",
+    "errorType": "AttributeError",
+    "location": "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/unittest/mock.py:1419",
+    "traceUsable": true,
+    "notes": "Multiple unittest errors (also TypeError); final traceback truncated at calculate_var line 47, labeled from last complete one."
+  },
+  {
+    "id": "python-013",
+    "environment": "Python",
+    "errorType": "AttributeError",
+    "location": "/data/data/com.termux/files/usr/lib/python3.14/site-packages/pd_compose/cli.py:38",
+    "traceUsable": true,
+    "notes": "Rich-formatted traceback (path:line style)."
+  },
+  {
+    "id": "python-014",
+    "environment": "Python",
+    "errorType": "AttributeError",
+    "location": "<stdin>:129",
+    "traceUsable": true,
+    "notes": "Invoked via make."
+  },
+  {
+    "id": "python-015",
+    "environment": "Python",
+    "errorType": "AttributeError",
+    "location": "multiprocessing\\process.py:329",
+    "traceUsable": true,
+    "notes": "Frozen (PyInstaller) app; earlier RuntimeError (CUDA no kernel image) is likely the root cause."
+  },
+  {
+    "id": "python-016",
+    "environment": "Python",
+    "errorType": "TypeError",
+    "location": ".../catalpa_tooling/dc_backup/hosts.py:169",
+    "traceUsable": true
+  },
+  {
+    "id": "python-017",
+    "environment": "Python",
+    "errorType": "TypeError",
+    "location": "C:\\Python\\Python311\\Lib\\json\\__init__.py:339",
+    "traceUsable": true,
+    "notes": "yt-dlp; innermost frame is stdlib json."
+  },
+  {
+    "id": "python-018",
+    "environment": "Python",
+    "errorType": "TypeError",
+    "location": "C:\\Users\\<USER>\\.platformio\\penv\\Lib\\site-packages\\platformio\\package\\meta.py:502",
+    "traceUsable": true,
+    "notes": "PlatformIO Python traceback relayed through VS Code extension node stack."
+  },
+  {
+    "id": "python-019",
+    "environment": "Python",
+    "errorType": "websockets.exceptions.ConnectionClosedOK",
+    "location": "/home/<USER>/.cache/bazel/_bazel_yemane/3629f6d6934fc813772fa5b220b97941/execroot/_main/bazel-out/k8-fastbuild/bin/src/cli/cli.runfiles/rules_python++pip+osmo_python_deps_314_websockets_py3_none_any_6681ba9e/site-packages/websockets/legacy/protocol.py:944",
+    "traceUsable": true,
+    "notes": "Repeated 'Task exception was never retrieved'; class printed fully qualified (ConnectionClosedOK)."
+  },
+  {
+    "id": "python-020",
+    "environment": "Python",
+    "errorType": "TypeError",
+    "location": "C:\\Users/<USER>/AppData/Roaming/QGIS/QGIS3\\profiles\\default/python/plugins\\qris_deploy\\src\\QRiS\\riverscapes_map_manager.py:589",
+    "traceUsable": true,
+    "notes": "QGIS plugin."
+  },
+  {
+    "id": "node-021",
+    "environment": "Node.js",
+    "errorType": "MODULE_NOT_FOUND",
+    "location": "/app/backend/scripts/sqlite-backup.js:13",
+    "traceUsable": true,
+    "notes": "Kubernetes pod log; column 17 dropped."
+  },
+  {
+    "id": "node-022",
+    "environment": "Node.js",
+    "errorType": "TypeError",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Class not printed; message is \"Cannot destructure property 'type' of 'orientation'\". Screen.js:197 named only in prose (inside quasar package). Also mentions unrelated Cannot find module (#1048)."
+  },
+  {
+    "id": "node-023",
+    "environment": "Node.js",
+    "errorType": "MODULE_NOT_FOUND",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Code not printed; 'Cannot find module' implies MODULE_NOT_FOUND. Only require stack in node_modules."
+  },
+  {
+    "id": "node-024",
+    "environment": "Node.js",
+    "errorType": "MODULE_NOT_FOUND",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Also shows t3 binary failing on missing libatomic.so.1 (likely root cause)."
+  },
+  {
+    "id": "node-025",
+    "environment": "Node.js",
+    "errorType": "NodePtyModuleLoadError",
+    "location": "file:///nix/store/x642227mjsz1lq5i8s2x5bd3wdb0582n-t3code-0.0.44/libexec/t3code/apps/server/dist/bin.mjs:203649",
+    "traceUsable": true,
+    "notes": "Cause chain: Cannot find module pty.node (MODULE_NOT_FOUND); root cause missing libstdc++.so.6 on NixOS."
+  },
+  {
+    "id": "node-026",
+    "environment": "Node.js",
+    "errorType": "TypeError",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Vitest repro snippet; no stack frames."
+  },
+  {
+    "id": "node-027",
+    "environment": "Node.js",
+    "errorType": "TypeError",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Prose description of browser bundle crash; no stack frames. Browser JS."
+  },
+  {
+    "id": "node-028",
+    "environment": "Node.js",
+    "errorType": "TypeError",
+    "location": "…/web/19907.48d4af89f0a3b0cee021.chunk.js:2",
+    "traceUsable": true,
+    "notes": "Browser JS (jellyfin-web console), not Node; path elided by reporter."
+  },
+  {
+    "id": "node-029",
+    "environment": "Node.js",
+    "errorType": "TypeError",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Browser React app; 'at WorkerProfilePage' has no path. Issue in Portuguese."
+  },
+  {
+    "id": "node-030",
+    "environment": "Node.js",
+    "errorType": "TypeError",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "From typescript-eslint under TS 7; prose only. Issue in French."
+  },
+  {
+    "id": "node-031",
+    "environment": "Node.js",
+    "errorType": "none",
+    "location": "none",
+    "traceUsable": false,
+    "notes": "Crash report with no error message or stack; mentioned EADDRINUSE is explicitly unrelated."
+  },
+  {
+    "id": "node-032",
+    "environment": "Node.js",
+    "errorType": "EADDRINUSE",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Only frame is node:net (core module, treated as internal)."
+  },
+  {
+    "id": "node-033",
+    "environment": "Other",
+    "errorType": "EINVAL",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Go (dae) code analysis in prose, not a real trace. EADDRINUSE mentioned only as a matched case."
+  },
+  {
+    "id": "node-034",
+    "environment": "Node.js",
+    "errorType": "EADDRINUSE",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Prose says raised from src/index.ts:452 but no 'at' frame."
+  },
+  {
+    "id": "node-035",
+    "environment": "Node.js",
+    "errorType": "EADDRINUSE",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "node-036",
+    "environment": "Node.js",
+    "errorType": "ERESOLVE",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "node-037",
+    "environment": "Node.js",
+    "errorType": "ERESOLVE",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "node-038",
+    "environment": "Node.js",
+    "errorType": "ERESOLVE",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Short: conflict details not shown."
+  },
+  {
+    "id": "node-039",
+    "environment": "Node.js",
+    "errorType": "ERESOLVE",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "node-040",
+    "environment": "Node.js",
+    "errorType": "ERESOLVE",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "git-041",
+    "environment": "Git",
+    "errorType": "Merge Conflict",
+    "location": "CHANGELOG.md",
+    "traceUsable": true,
+    "notes": "During cherry-pick."
+  },
+  {
+    "id": "git-042",
+    "environment": "Git",
+    "errorType": "Merge Conflict",
+    "location": "CHANGELOG.md",
+    "traceUsable": true,
+    "notes": "Rebase conflict reported via failed push in GitHub workflow."
+  },
+  {
+    "id": "git-043",
+    "environment": "Git",
+    "errorType": "Merge Conflict",
+    "location": "data/raw/ca_lists/01.html.gz",
+    "traceUsable": true,
+    "notes": "Rebase; binary files."
+  },
+  {
+    "id": "git-044",
+    "environment": "Git",
+    "errorType": "Merge Conflict",
+    "location": "orchestrator/dashboard.py",
+    "traceUsable": true
+  },
+  {
+    "id": "git-045",
+    "environment": "Git",
+    "errorType": "Merge Conflict",
+    "location": "bun.lock",
+    "traceUsable": true,
+    "notes": "Docs/policy issue; conflict comes from a reproduction step, not a real failure."
+  },
+  {
+    "id": "git-046",
+    "environment": "Git",
+    "errorType": "Push Rejected",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "remote rejected: cannot lock ref (CI)."
+  },
+  {
+    "id": "git-047",
+    "environment": "Git",
+    "errorType": "Push Rejected",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Prose; push rejected by pre-push hook; ref elided."
+  },
+  {
+    "id": "git-048",
+    "environment": "Git",
+    "errorType": "Push Rejected",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Long agent run log; remote rejected (failed)."
+  },
+  {
+    "id": "git-049",
+    "environment": "Git",
+    "errorType": "Push Rejected",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "force-with-lease rejected (stale info)."
+  },
+  {
+    "id": "git-050",
+    "environment": "Git",
+    "errorType": "Push Rejected",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "force-with-lease rejected (stale info)."
+  },
+  {
+    "id": "docker-051",
+    "environment": "Other",
+    "errorType": "none",
+    "location": "none",
+    "traceUsable": false,
+    "notes": "Not an error trace: research/design issue on MEA thermodynamics, no error output."
+  },
+  {
+    "id": "docker-052",
+    "environment": "Docker",
+    "errorType": "Port Already Allocated",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Also Redis 'Address already in use' bind failure."
+  },
+  {
+    "id": "docker-053",
+    "environment": "Docker",
+    "errorType": "Port Already Allocated",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "docker-054",
+    "environment": "Docker",
+    "errorType": "Port Already Allocated",
+    "location": "none",
+    "traceUsable": false,
+    "notes": "One-line summary quoting the message; no actual error output."
+  },
+  {
+    "id": "docker-055",
+    "environment": "Docker",
+    "errorType": "Port Already Allocated",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "GitHub Actions service container."
+  },
+  {
+    "id": "docker-056",
+    "environment": "Docker",
+    "errorType": "Port Already Allocated",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "unsupported-057",
+    "environment": "Other",
+    "errorType": "none",
+    "location": "none",
+    "traceUsable": false,
+    "notes": "Chinese design discussion; E0382 only cited as an example, no error output."
+  },
+  {
+    "id": "unsupported-058",
+    "environment": "Other",
+    "errorType": "E0382",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Rust; no file path shown, only line 39."
+  },
+  {
+    "id": "unsupported-059",
+    "environment": "Other",
+    "errorType": "E0382",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Rust; no file path shown."
+  },
+  {
+    "id": "unsupported-060",
+    "environment": "Other",
+    "errorType": "E0382",
+    "location": "src/lib.rs:9",
+    "traceUsable": true,
+    "notes": "Rust; two errors (E0515 at src/lib.rs:3 first), labeled the last."
+  },
+  {
+    "id": "unsupported-061",
+    "environment": "Other",
+    "errorType": "E0382",
+    "location": "src\\main\\main.rs:8",
+    "traceUsable": true,
+    "notes": "Rust."
+  },
+  {
+    "id": "unsupported-062",
+    "environment": "Other",
+    "errorType": "nil pointer dereference",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Go panic described in prose; file core/domain/scan_status.go without line."
+  },
+  {
+    "id": "unsupported-063",
+    "environment": "Other",
+    "errorType": "nil pointer dereference",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Go panic, frames without file paths."
+  },
+  {
+    "id": "unsupported-064",
+    "environment": "Other",
+    "errorType": "nil pointer dereference",
+    "location": "attest/activation.go:155",
+    "traceUsable": true,
+    "notes": "Go panic (SIGSEGV)."
+  },
+  {
+    "id": "unsupported-065",
+    "environment": "Other",
+    "errorType": "nil pointer dereference",
+    "location": "/usr/local/go/src/sync/atomic/type.go:114",
+    "traceUsable": true,
+    "notes": "Go panic in arrow-go ipc Reader.Release during re-panic from Reader.Next (reader.go:193); innermost frame is stdlib atomic. Surfaced via dbt."
+  },
+  {
+    "id": "unsupported-066",
+    "environment": "Other",
+    "errorType": "nil pointer dereference",
+    "location": "octopusdeploy_framework/resource_tag.go:341",
+    "traceUsable": true,
+    "notes": "Go terraform provider crash."
+  },
+  {
+    "id": "unsupported-067",
+    "environment": "Other",
+    "errorType": "NullPointerException",
+    "location": "Denotations.scala:1347",
+    "traceUsable": true,
+    "notes": "Scala/JVM."
+  },
+  {
+    "id": "unsupported-068",
+    "environment": "Other",
+    "errorType": "NullPointerException",
+    "location": "HostFunctions.java:277",
+    "traceUsable": true,
+    "notes": "Java."
+  },
+  {
+    "id": "unsupported-069",
+    "environment": "Other",
+    "errorType": "NullPointerException",
+    "location": "Denotations.scala:1347",
+    "traceUsable": true,
+    "notes": "Scala/JVM (scala-cli)."
+  },
+  {
+    "id": "unsupported-070",
+    "environment": "Other",
+    "errorType": "NullPointerException",
+    "location": "Main.kt:11",
+    "traceUsable": true,
+    "notes": "Kotlin/JVM."
+  },
+  {
+    "id": "unsupported-071",
+    "environment": "Other",
+    "errorType": "NullPointerException",
+    "location": "SupervisorPlanner.java:156",
+    "traceUsable": true,
+    "notes": "Java (langchain4j)."
+  }
+]

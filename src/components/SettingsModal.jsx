@@ -125,7 +125,7 @@ export default function SettingsModal({ config, remember, onSave, onClose }) {
           <button
             onClick={() => onSave({ model, apiKey, baseUrl }, keep)}
             disabled={!canSave}
-            className="px-4 py-1.5 rounded-lg text-xs font-semibold font-mono bg-violet-600 hover:bg-violet-500 text-white disabled:bg-slate-800 disabled:text-slate-500"
+            className="px-4 py-1.5 rounded-lg text-xs font-semibold font-mono bg-violet-600 hover:bg-violet-500 text-on-accent disabled:bg-slate-800 disabled:text-slate-500"
           >
             Save
           </button>

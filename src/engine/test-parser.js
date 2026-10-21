@@ -78,6 +78,7 @@ console.log('\n--- Secret redaction ---');
 const red = redactSecrets(ERROR_PRESETS.find(p => p.id === 'postgres-secret').rawError);
 expect('Password removed', red.text.includes('Sup3rS3cret'), false);
 expect('Windows user name removed', red.text.includes('jane'), false);
+expect('Mixed-slash Windows path masked', redactSecrets('C:\\Users/joe/AppData/x.py').text, 'C:\\Users/<USER>/AppData/x.py');
 expect('Trace still readable', red.text.includes('password authentication failed'), true);
 const keys = redactSecrets('ANTHROPIC_API_KEY=sk-ant-api03-abcdefghijklmnop1234 token ghp_abcdefghijklmnopqrstuvwxyz0123456789 AKIAIOSFODNN7EXAMPLE');
 expect('API keys removed', /sk-ant-api03|ghp_|AKIA/.test(keys.text), false);

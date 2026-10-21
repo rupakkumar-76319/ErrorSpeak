@@ -46,6 +46,7 @@ export default function TerminalInput({
               onClick={onClear}
               className="text-slate-400 hover:text-rose-400 p-1 rounded hover:bg-slate-800 transition-colors"
               title="Clear Terminal"
+              aria-label="Clear input"
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>
@@ -54,9 +55,9 @@ export default function TerminalInput({
       </div>
 
       {/* Editor Body with Line Numbers */}
-      <div className="relative flex-1 flex bg-[#070B14] min-h-[300px]">
+      <div className="relative flex-1 flex bg-page min-h-[300px]">
         {/* Line Numbers Bar */}
-        <div className="select-none py-3 px-2 text-right font-mono text-xs text-slate-600 bg-slate-950/40 border-r border-slate-800/40 min-w-[2.5rem]">
+        <div aria-hidden="true" className="select-none py-3 px-2 text-right font-mono text-xs text-slate-600 bg-slate-950/40 border-r border-slate-800/40 min-w-[2.5rem]">
           {Array.from({ length: Math.max(lineCount, 12) }).map((_, i) => (
             <div key={i} className="leading-6">
               {i + 1}
@@ -69,6 +70,7 @@ export default function TerminalInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
+          aria-label="Terminal error output"
           placeholder="// Paste terminal error, traceback, or compiler output here...&#10;// Or click any sample preset above to see instant diagnosis."
           className="flex-1 p-3 bg-transparent font-mono text-xs sm:text-sm text-slate-200 placeholder:text-slate-600 leading-6 resize-none focus:outline-none focus:ring-0 selection:bg-cyan-500/30"
           spellCheck={false}
@@ -88,7 +90,7 @@ export default function TerminalInput({
           disabled={!value.trim() || isAnalyzing}
           className={`flex items-center gap-2 px-4 py-1.5 rounded-lg font-semibold text-xs transition-all shadow-md ${
             value.trim() && !isAnalyzing
-              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-cyan-500/20 active:scale-95'
+              ? 'bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-on-accent shadow-blue-500/20 active:scale-95'
               : 'bg-slate-800 text-slate-500 cursor-not-allowed'
           }`}
         >

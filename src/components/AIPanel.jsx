@@ -25,7 +25,7 @@ export default function AIPanel({ rawText, localReport, modelName, status, onAsk
           <button
             onClick={() => onAsk(redacted)}
             disabled={status.loading}
-            className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold font-mono bg-violet-600 hover:bg-violet-500 text-white disabled:opacity-60"
+            className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold font-mono bg-violet-600 hover:bg-violet-500 text-on-accent disabled:opacity-60"
           >
             {status.loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
             {status.loading ? 'Asking...' : `Ask ${modelName}`}
@@ -56,7 +56,7 @@ export default function AIPanel({ rawText, localReport, modelName, status, onAsk
       </div>
 
       {showPreview && (
-        <pre className="mt-2 max-h-48 overflow-auto rounded-lg bg-[#050811] border border-slate-800 p-2.5 text-[11px] text-slate-300 whitespace-pre-wrap">{redacted}</pre>
+        <pre className="mt-2 max-h-48 overflow-auto rounded-lg bg-code border border-slate-800 p-2.5 text-[11px] text-slate-300 whitespace-pre-wrap">{redacted}</pre>
       )}
 
       {status.error && (

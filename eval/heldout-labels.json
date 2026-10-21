@@ -1,0 +1,539 @@
+[
+  {
+    "id": "h-python-001",
+    "environment": "Python",
+    "errorType": "KeyError",
+    "location": "F:\\ComfyUI_Portable_Python_3.12.12_T6\\python_embeded\\Lib\\site-packages\\nunchaku\\utils.py:325",
+    "traceUsable": true
+  },
+  {
+    "id": "h-python-002",
+    "environment": "Python",
+    "errorType": "KeyError",
+    "location": "/home/<USER>/work/my-userbot/my-userbot/skills/market_portfolio_scenario_simulator.py:59",
+    "traceUsable": true
+  },
+  {
+    "id": "h-python-003",
+    "environment": "Python",
+    "errorType": "KeyError",
+    "location": "/usr/local/lib/python3.14/site-packages/pykoplenti/model.py:59",
+    "traceUsable": true
+  },
+  {
+    "id": "h-python-004",
+    "environment": "Python",
+    "errorType": "KeyError",
+    "location": "py/visdom/server/handlers/web_handlers.py:738",
+    "traceUsable": true
+  },
+  {
+    "id": "h-python-005",
+    "environment": "Python",
+    "errorType": "KeyError",
+    "location": "apps/home/<USER>:1391",
+    "traceUsable": true,
+    "notes": "Path partly masked by placeholder"
+  },
+  {
+    "id": "h-python-006",
+    "environment": "Python",
+    "errorType": "ModuleNotFoundError",
+    "location": "/usr/lib/python3/dist-packages/netkeeper/bin/netkeeper.py:39",
+    "traceUsable": true
+  },
+  {
+    "id": "h-python-007",
+    "environment": "Python",
+    "errorType": "ModuleNotFoundError",
+    "location": "/home/<USER>/.hermes/hermes-agent/hermes_yaml.py:10",
+    "traceUsable": true
+  },
+  {
+    "id": "h-python-008",
+    "environment": "Python",
+    "errorType": "ModuleNotFoundError",
+    "location": "/home/<USER>/projects/sigma/utils/stac_downloader.py:6",
+    "traceUsable": true
+  },
+  {
+    "id": "h-python-009",
+    "environment": "Python",
+    "errorType": "ModuleNotFoundError",
+    "location": "/home/<USER>/projects/sigma/utils/cloud_detector.py:3",
+    "traceUsable": true
+  },
+  {
+    "id": "h-python-010",
+    "environment": "Python",
+    "errorType": "ModuleNotFoundError",
+    "location": "/home/<USER>/projects/sigma/examples/example_mosaic.py:1",
+    "traceUsable": true
+  },
+  {
+    "id": "h-python-011",
+    "environment": "Python",
+    "errorType": "AttributeError",
+    "location": "...\\deployers\\bicep\\postconfig.py:570",
+    "traceUsable": true,
+    "notes": "Followed by azd hook failure (exit code 1); root cause is the Python AttributeError"
+  },
+  {
+    "id": "h-python-012",
+    "environment": "Python",
+    "errorType": "AttributeError",
+    "location": "/usr/src/homeassistant/homeassistant/helpers/entity.py:1119",
+    "traceUsable": false,
+    "notes": "Chained traceback truncated before the final exception line; only the first (cause) AttributeError is shown"
+  },
+  {
+    "id": "h-python-013",
+    "environment": "Python",
+    "errorType": "AttributeError",
+    "location": "/usr/lib/python3.14/site-packages/arctis_sound_manager/scripts/gui.py:319",
+    "traceUsable": true
+  },
+  {
+    "id": "h-python-014",
+    "environment": "Python",
+    "errorType": "AttributeError",
+    "location": "/usr/local/bin/../share/yosys/python3/sby_core.py:1328",
+    "traceUsable": true
+  },
+  {
+    "id": "h-python-015",
+    "environment": "Python",
+    "errorType": "AttributeError",
+    "location": "/usr/lib/python3.14/site-packages/arctis_sound_manager/scripts/gui.py:319",
+    "traceUsable": true,
+    "notes": "Duplicate of h-python-013"
+  },
+  {
+    "id": "h-python-016",
+    "environment": "Python",
+    "errorType": "TypeError",
+    "location": "C:\\Users\\<USER>\\ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1794",
+    "traceUsable": true,
+    "notes": "Traceback head cut off but final error present"
+  },
+  {
+    "id": "h-python-017",
+    "environment": "Python",
+    "errorType": "TypeError",
+    "location": "/usr/lib/python3.13/threading.py:995",
+    "traceUsable": true,
+    "notes": "Two thread tracebacks; labeled the last one (LlamaCPPHandler)"
+  },
+  {
+    "id": "h-python-018",
+    "environment": "Python",
+    "errorType": "TypeError",
+    "location": "/work/FAC/FBM/DBC/cdessim2/default/agavriilidou/miniforge3/envs/test_levels_hogprof_p311/lib/python3.11/site-packages/h5py/_hl/selections.py:265",
+    "traceUsable": true
+  },
+  {
+    "id": "h-python-019",
+    "environment": "Python",
+    "errorType": "AttributeError",
+    "location": "/usr/lib/python3.9/site-packages/vmm_export/cli.py:241",
+    "traceUsable": true,
+    "notes": "Earlier KeyboardInterrupt traceback from Ctrl-C; last printed is the asyncio task AttributeError"
+  },
+  {
+    "id": "h-python-020",
+    "environment": "Python",
+    "errorType": "ansible.module_utils.connection.ConnectionError",
+    "location": ".../ansible/module_utils/connection.py:183",
+    "traceUsable": true
+  },
+  {
+    "id": "h-node-021",
+    "environment": "Node.js",
+    "errorType": "MODULE_NOT_FOUND",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "No stack frames in trace"
+  },
+  {
+    "id": "h-node-022",
+    "environment": "Node.js",
+    "errorType": "MODULE_NOT_FOUND",
+    "location": "/home/<USER>/work/_actions/azure/load-testing/fa7ee8f7becd06447f042734b6446e8f6fd65f0f/lib/Utils/CoreUtils.js:27",
+    "traceUsable": true,
+    "notes": "Frame written as :27:27 (line:col)"
+  },
+  {
+    "id": "h-node-023",
+    "environment": "Node.js",
+    "errorType": "MODULE_NOT_FOUND",
+    "location": "file:///home/<USER>/general-tasks/.codex/runtime/github-portfolio-audit-20260929/workers/worker-07/repos/skills/darwin-skill/scripts/screenshot.mjs:18",
+    "traceUsable": true,
+    "notes": "Frame written as :18:12 (line:col)"
+  },
+  {
+    "id": "h-node-024",
+    "environment": "Node.js",
+    "errorType": "MODULE_NOT_FOUND",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Next.js server log; no stack frames"
+  },
+  {
+    "id": "h-node-025",
+    "environment": "Node.js",
+    "errorType": "MODULE_NOT_FOUND",
+    "location": "C:\\Users\\<redacted>\\Desktop\\nx-repro\\nx-repro-23-pnpm-1790678988915-out\\backend\\dist\\main.js:33",
+    "traceUsable": true,
+    "notes": "First user frame is a patched Module._resolveFilename in dist/main.js; the requiring frame is dist\\apps\\backend\\src\\main.js:25"
+  },
+  {
+    "id": "h-node-026",
+    "environment": "Node.js",
+    "errorType": "TypeError",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Prose issue report, no stack; message quoted (Cannot read properties of undefined (reading 'declarations')); candidate sites listed in a table (e.g. src/utils/function-helpers.ts:41)"
+  },
+  {
+    "id": "h-node-027",
+    "environment": "Node.js",
+    "errorType": "TypeError",
+    "location": "index-P_fjfqd5.js:1",
+    "traceUsable": true,
+    "notes": "Browser JS (bundled frontend), not Node runtime; frame written as :1:95982"
+  },
+  {
+    "id": "h-node-028",
+    "environment": "Node.js",
+    "errorType": "TypeError",
+    "location": "lib/error-wrapper.js:294",
+    "traceUsable": true
+  },
+  {
+    "id": "h-node-029",
+    "environment": "Node.js",
+    "errorType": "TypeError",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "h-node-030",
+    "environment": "Node.js",
+    "errorType": "TypeError",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Vitest output with an AssertionError then a TypeError; labeled the last printed error"
+  },
+  {
+    "id": "h-node-031",
+    "environment": "Node.js",
+    "errorType": "none",
+    "location": "none",
+    "traceUsable": false,
+    "notes": "Code diff only (log classifier regexes and tests); contains no actual error output"
+  },
+  {
+    "id": "h-node-032",
+    "environment": "Node.js",
+    "errorType": "none",
+    "location": "none",
+    "traceUsable": false,
+    "notes": "Code diff only (test expectations); contains no actual error output"
+  },
+  {
+    "id": "h-node-033",
+    "environment": "Node.js",
+    "errorType": "EADDRINUSE",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Chinese prose audit of an Android shell (Kotlin) whose embedded Node engine dies with listen EADDRINUSE 127.0.0.1:3080; Kotlin file:line refs are analysis, not stack frames"
+  },
+  {
+    "id": "h-node-034",
+    "environment": "Node.js",
+    "errorType": "EADDRINUSE",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "node:test TAP output; no 'at' frames; failing test declared at /home/<USER>/work/construct/construct/ui/server/src/devServer.test.mjs:251:1; two other failures have empty error text"
+  },
+  {
+    "id": "h-node-035",
+    "environment": "Node.js",
+    "errorType": "WSAEADDRINUSE",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Ambiguous: .NET TcpListener probe (likely PowerShell) shows WSAEADDRINUSE (10048); final line from opencode serve is 'Error: Unexpected error / ServeError'"
+  },
+  {
+    "id": "h-node-036",
+    "environment": "Node.js",
+    "errorType": "ERESOLVE",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "h-node-037",
+    "environment": "Node.js",
+    "errorType": "ERESOLVE",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Issue prose quoting the npm ERESOLVE conflict"
+  },
+  {
+    "id": "h-node-038",
+    "environment": "Node.js",
+    "errorType": "ERESOLVE",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "h-node-039",
+    "environment": "Node.js",
+    "errorType": "ERESOLVE",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "h-node-040",
+    "environment": "Node.js",
+    "errorType": "ERESOLVE",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Followed by pasted upstream issue comments"
+  },
+  {
+    "id": "h-git-041",
+    "environment": "Git",
+    "errorType": "Merge Conflict",
+    "location": "crates/perl-lsp-rs-core/src/providers/completion/completion/workspace.rs",
+    "traceUsable": true
+  },
+  {
+    "id": "h-git-042",
+    "environment": "Git",
+    "errorType": "Merge Conflict",
+    "location": "README.md",
+    "traceUsable": true,
+    "notes": "Korean prose; rebase conflict in CI also preceded by a 'cannot lock ref' push race"
+  },
+  {
+    "id": "h-git-043",
+    "environment": "Git",
+    "errorType": "Merge Conflict",
+    "location": "packages/workshop-backend/src/agent-compaction.ts",
+    "traceUsable": true,
+    "notes": "git am 3-way merge; four conflicted files"
+  },
+  {
+    "id": "h-git-044",
+    "environment": "Git",
+    "errorType": "Merge Conflict",
+    "location": "README.md",
+    "traceUsable": true
+  },
+  {
+    "id": "h-git-045",
+    "environment": "Git",
+    "errorType": "Merge Conflict",
+    "location": "tools/update_deps.sh",
+    "traceUsable": true,
+    "notes": "git am; also a modify/delete conflict on .github/workflows/update-deps.yaml"
+  },
+  {
+    "id": "h-git-046",
+    "environment": "Git",
+    "errorType": "Push Rejected",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "non-fast-forward"
+  },
+  {
+    "id": "h-git-047",
+    "environment": "Git",
+    "errorType": "Push Rejected",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Remote rejected by GitHub repository rules (GH013), not non-fast-forward; surrounded by unrelated notes"
+  },
+  {
+    "id": "h-git-048",
+    "environment": "Git",
+    "errorType": "Push Rejected",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Long bot summary; force-with-lease push rejected (stale info) twice"
+  },
+  {
+    "id": "h-git-049",
+    "environment": "Git",
+    "errorType": "Push Rejected",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "stale info (force-with-lease)"
+  },
+  {
+    "id": "h-git-050",
+    "environment": "Git",
+    "errorType": "Push Rejected",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "non-fast-forward"
+  },
+  {
+    "id": "h-docker-051",
+    "environment": "Docker",
+    "errorType": "Port Already Allocated",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "h-docker-052",
+    "environment": "Docker",
+    "errorType": "Port Already Allocated",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Prose report; root cause analysis points to providers/docker/src/port-allocator.ts:38-56 (not a stack frame)"
+  },
+  {
+    "id": "h-docker-053",
+    "environment": "Docker",
+    "errorType": "Port Already Allocated",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "h-docker-054",
+    "environment": "Docker",
+    "errorType": "Port Already Allocated",
+    "location": "none",
+    "traceUsable": true
+  },
+  {
+    "id": "h-docker-055",
+    "environment": "Docker",
+    "errorType": "Port Already Allocated",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "German prose incident report"
+  },
+  {
+    "id": "h-unsupported-056",
+    "environment": "Other",
+    "errorType": "E0382",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Rust; prose backlog entry about a compiler's E0382 wording; no source location for the error"
+  },
+  {
+    "id": "h-unsupported-057",
+    "environment": "Other",
+    "errorType": "E0382",
+    "location": "investment_vault/src/test.rs:4002",
+    "traceUsable": true,
+    "notes": "Rust; prose issue, no compiler output location; line taken from the quoted snippet (use after move), test starts ~3985"
+  },
+  {
+    "id": "h-unsupported-058",
+    "environment": "Other",
+    "errorType": "E0382",
+    "location": "none",
+    "traceUsable": true,
+    "notes": "Rust (rustc error surfaced through almide build)"
+  },
+  {
+    "id": "h-unsupported-059",
+    "environment": "Other",
+    "errorType": "E0382",
+    "location": "…/almide_test_main.rs:3903",
+    "traceUsable": true,
+    "notes": "Rust; written as :3903:61"
+  },
+  {
+    "id": "h-unsupported-060",
+    "environment": "Other",
+    "errorType": "E0382",
+    "location": "src/main.rs:142",
+    "traceUsable": true,
+    "notes": "Rust"
+  },
+  {
+    "id": "h-unsupported-061",
+    "environment": "Other",
+    "errorType": "nil pointer dereference",
+    "location": "github.com/daeuniverse/dae@v0.2.0/control/routing_matcher_userspace.go:108",
+    "traceUsable": true,
+    "notes": "Go panic: runtime error: invalid memory address or nil pointer dereference"
+  },
+  {
+    "id": "h-unsupported-062",
+    "environment": "Other",
+    "errorType": "nil pointer dereference",
+    "location": "math/big/float.go:1684",
+    "traceUsable": true,
+    "notes": "Go panic; innermost frame is stdlib, first project frame core/rlwe/scale.go:236"
+  },
+  {
+    "id": "h-unsupported-063",
+    "environment": "Other",
+    "errorType": "nil pointer dereference",
+    "location": "pkg/analyzer/clustercatalog.go:63",
+    "traceUsable": true,
+    "notes": "Go panic"
+  },
+  {
+    "id": "h-unsupported-064",
+    "environment": "Other",
+    "errorType": "nil pointer dereference",
+    "location": "/go/src/github.com/cilium/tetragon/pkg/sensors/tracing/generickprobe.go:1407",
+    "traceUsable": true,
+    "notes": "Go panic (recovered, repanicked); top frame is sync/waitgroup.go:251 repanic, actual panic site is frame after panic()"
+  },
+  {
+    "id": "h-unsupported-065",
+    "environment": "Other",
+    "errorType": "nil pointer dereference",
+    "location": "/usr/local/go/src/runtime/plugin.go:54",
+    "traceUsable": true,
+    "notes": "Go panic inside plugin loading; first project frame /src/gotify/plugin/manager.go:233"
+  },
+  {
+    "id": "h-unsupported-066",
+    "environment": "Other",
+    "errorType": "NullPointerException",
+    "location": "KHRDebug.java:58",
+    "traceUsable": true,
+    "notes": "Java; two separate repros, labeled the last; first repro top frame Checks.java:188"
+  },
+  {
+    "id": "h-unsupported-067",
+    "environment": "Other",
+    "errorType": "NumberFormatException",
+    "location": "Rexx.java:692",
+    "traceUsable": true,
+    "notes": "Java (NetRexx)"
+  },
+  {
+    "id": "h-unsupported-068",
+    "environment": "Other",
+    "errorType": "NullPointerException",
+    "location": "Util.java:67",
+    "traceUsable": true,
+    "notes": "Java"
+  },
+  {
+    "id": "h-unsupported-069",
+    "environment": "Other",
+    "errorType": "NullPointerException",
+    "location": "Test.java:46",
+    "traceUsable": true,
+    "notes": "Java"
+  },
+  {
+    "id": "h-unsupported-070",
+    "environment": "Other",
+    "errorType": "NullPointerException",
+    "location": "NrAddress.java:405",
+    "traceUsable": true,
+    "notes": "Java (NetRexx)"
+  }
+]

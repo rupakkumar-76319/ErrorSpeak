@@ -3,6 +3,9 @@
 
 const norm = (s) => (s || '').replace(/\\\\/g, '\\').replace(/\s+/g, ' ').trim().toLowerCase();
 
+// Codes the engine reports under their official name, which some traces only show as a phrase
+const ERROR_ALIASES = { MODULE_NOT_FOUND: 'cannot find module' };
+
 // Words too common to count as evidence on their own
 const GENERIC_WORDS = new Set(['error', 'errors', 'failure', 'failed', 'command', 'runtime', 'exception', 'blocked']);
 
@@ -19,8 +22,9 @@ export function groundReport(report, rawText) {
   // 1. Error type named in the trace
   if (report.errorType && report.confidence !== 'low') {
     const tokens = report.errorType.split(/[\s()]+/).filter(t => t.length >= 4 && !GENERIC_WORDS.has(t.toLowerCase()));
-    const hit = trace.includes(norm(report.errorType)) || tokens.some(t => trace.includes(norm(t)));
-    checks.push({ label: `Error type "${report.errorType}" appears in the trace`, ok: hit });
+    const alias = ERROR_ALIASES[report.errorType];
+    const hit = trace.includes(norm(report.errorType)) || tokens.some(t => trace.includes(norm(t))) || (!!alias && trace.includes(alias));
+    checks.push({ label: `Error type "${report.errorType}" appears in the trace${alias ? ` (or as "${alias}")` : ''}`, ok: hit });
   }
 
   // 2. Fault location appears in the trace (file name, and line number when given)
@@ -39,7 +43,8 @@ export function groundReport(report, rawText) {
   }
 
   // 4. Packages / names in the fix command come from the trace
-  const install = (report.fixCommand || '').match(/\b(?:npm (?:install|i)|pip install|yarn add|pnpm add)\s+([@\w.\-/]+)/i);
+  // (the package is the first argument that isn't a flag; "npm install --legacy-peer-deps" names none)
+  const install = (report.fixCommand || '').match(/\b(?:npm (?:install|i)|pip install|yarn add|pnpm add)\s+(?!-)([@\w.\-/]+)/i);
   if (install) {
     const pkg = install[1];
     const root = pkg.startsWith('@') ? pkg.split('/').slice(0, 2).join('/') : pkg.split('/')[0];

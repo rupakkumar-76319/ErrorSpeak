@@ -23,13 +23,14 @@ export function detectEnvironment(rawText) {
     text.includes('eaddrinuse') ||
     text.includes('eresolve') ||
     text.includes('referenceerror:') ||
+    /\b(typeerror|rangeerror): (cannot read propert|cannot set propert|cannot destructure|.+ is not a function|.+ is not iterable)/.test(text) ||
     /at .+\.(m?js|cjs|ts):\d+:\d+/.test(text)
   ) {
     return 'Node.js';
   }
   if (
     text.includes('conflict (content)') ||
-    text.includes('merge conflict') ||
+    text.includes('merge conflict in') ||
     text.includes('not a git repository') ||
     text.includes('automatic merge failed') ||
     text.includes('non-fast-forward') ||
@@ -77,7 +78,7 @@ const quoteIfSpaced = (s) => (/\s/.test(s) ? `"${s}"` : s);
 export function parseError(rawText) {
   if (!rawText || !rawText.trim()) return null;
 
-  const trimmed = rawText.trim();
+  const trimmed = cleanLog(rawText).trim();
   const env = detectEnvironment(trimmed);
   const lines = trimmed.split('\n').map(l => l.trim()).filter(Boolean);
 
@@ -112,39 +113,86 @@ export function parseError(rawText) {
   };
 }
 
+// CI logs prefix every line with timestamps or annotations; terminals add colour codes
+const LOG_PREFIX = /^\s*(?:\d{4}-\d{2}-\d{2}[T ][\d:.,]+Z?\s+|\[?\d{1,2}:\d{2}:\d{2}(?:[.,]\d+)?\]?\s+|##\[(?:error|warning|debug)\]\s*)/;
+const ANSI = /\x1b\[[0-9;?]*[A-Za-z]/g;
+export function cleanLog(text) {
+  return text.replace(ANSI, '').split('\n').map(l => l.replace(LOG_PREFIX, '')).join('\n');
+}
+
+// Library and interpreter frames, where a beginner can't (and shouldn't) edit the code
+const isLibraryFrame = (f) => /site-packages|dist-packages|<frozen |[\\/]lib[\\/]python\d|hostedtoolcache|<string>|<stdin>/.test(f);
+
+// Python prints each traceback as: header, frames, then the exception as the first
+// unindented line after the last frame. Plain ("File "x", line N") and Rich
+// ("x.py:N in fn" inside a box) formats are both read.
+function readTraceback(block) {
+  const lines = block.split('\n');
+  const frames = [];
+  lines.forEach((l, i) => {
+    const plain = l.match(/File "([^"]+)", line (\d+)/);
+    const rich = !plain && l.match(/([^\s│|"]+\.py):(\d+) in [\w<>.]+/);
+    const m = plain || rich;
+    if (m) frames.push({ file: m[1], line: m[2], idx: i, rich: !!rich });
+  });
+  const last = frames[frames.length - 1];
+  const start = last ? last.idx + 1 : 0;
+  let exception = null;
+  for (let i = start; i < lines.length; i++) {
+    const l = lines[i];
+    if (!l.trim() || /^\s/.test(l) || /^[│╰╭─|]/.test(l)) continue;
+    const m = l.match(/^([A-Za-z_][\w.]*)(?::\s?(.*))?$/);
+    if (m && /[A-Z]/.test(m[1]) && !/^(During|The above|Traceback)/.test(l)) exception = { name: m[1], detail: (m[2] || '').trim() };
+    break;
+  }
+  let code = '';
+  if (last && !last.rich) {
+    const next = (lines[last.idx + 1] || '').trim();
+    if (next && /^\s/.test(lines[last.idx + 1]) && !/^[\^~\s]+$/.test(next) && !/^File "/.test(next)) code = next;
+  } else if (last) {
+    const marked = lines.slice(last.idx).find(l => /❱\s*\d+\s*│/.test(l));
+    if (marked) code = marked.replace(/^.*❱\s*\d+\s*│\s?/, '').replace(/\s*│\s*$/, '').trim();
+  }
+  return { frames, exception, code };
+}
+
 // --- PYTHON ---
 function parsePython(text, r) {
-  const rawLines = text.split('\n');
+  // Use the last traceback that actually ends in an exception line; logs often cut the final one off
+  const blocks = text.split(/^.*Traceback \(most recent call last\).*$/m).slice(1);
+  const parsed = (blocks.length ? blocks : [text]).map(readTraceback);
+  const tb = [...parsed].reverse().find(p => p.exception) || parsed[parsed.length - 1];
+  const inner = tb.frames[tb.frames.length - 1];
+  const userFrame = [...tb.frames].reverse().find(f => !isLibraryFrame(f.file));
+  const file = inner?.file, line = inner?.line;
+  if (inner) r.location = `${file}:${line}`;
+  r.offendingCode = tb.code;
 
-  // The innermost frame (last "File ..." line) is where the error was raised
-  let file = null, line = null, frameIdx = -1;
-  rawLines.forEach((l, i) => {
-    const m = l.match(/File "([^"]+)", line (\d+)/);
-    if (m) { file = m[1]; line = m[2]; frameIdx = i; }
-  });
-  if (file) r.location = `${file}:${line}`;
-
-  const next = frameIdx >= 0 ? (rawLines[frameIdx + 1] || '').trim() : '';
-  if (next && !/^\w*(Error|Exception)\b/.test(next) && !/^[\^~\s]+$/.test(next)) {
-    r.offendingCode = next;
+  // Without a traceback, fall back to a bare "SomethingError: message" line
+  let exc = tb.exception;
+  if (!exc) {
+    const bare = text.split('\n').reverse().find(l => /^[A-Za-z_][\w.]*(Error|Exception)\b:/.test(l));
+    const m = bare && bare.match(/^([A-Za-z_][\w.]*)(?::\s?(.*))?$/);
+    if (m) exc = { name: m[1], detail: (m[2] || '').trim() };
   }
-
-  const errLine = [...rawLines].reverse().find(l => /^\s*[A-Za-z0-9_.]*(Error|Exception|Warning)\b:?/.test(l));
-  const errMatch = errLine && errLine.trim().match(/^([A-Za-z0-9_.]*(?:Error|Exception|Warning))\b:?\s*(.*)$/);
-  if (!errMatch) {
+  if (!exc) {
     r.confidence = 'low';
-    r.fixCommand = file ? openAt(file, line) : '';
-    r.fixKind = file ? 'code' : 'diagnose';
-    r.whyItWorks = 'Opens the failing line so you can inspect it.';
+    r.fixCommand = userFrame ? openAt(userFrame.file, userFrame.line) : '';
+    r.fixKind = userFrame ? 'code' : 'diagnose';
+    r.whyItWorks = 'The traceback was cut off before the error message, so only the last frame is known. Opens it so you can inspect it.';
     return;
   }
 
-  r.errorType = errMatch[1].split('.').pop();
-  const detail = errMatch[2] || '';
+  r.errorType = exc.name.split('.').pop();
+  const detail = exc.detail;
   r.confidence = 'high';
   r.fixKind = 'code';
-  r.fixCommand = file ? openAt(file, line) : 'python -X dev your_script.py';
+  // Open the deepest frame in the user's own code, not inside a library
+  r.fixCommand = userFrame ? openAt(userFrame.file, userFrame.line) : 'python -X dev your_script.py';
   r.severity = 6;
+  if (inner && userFrame && inner !== userFrame) {
+    r.whyItWorksPrefix = `The error surfaced inside a library (${file.split(/[\\/]/).pop()}), but the call that triggered it is in your code at ${userFrame.file}:${userFrame.line}. `;
+  }
 
   switch (r.errorType) {
     case 'KeyError': {
@@ -244,10 +292,16 @@ function parsePython(text, r) {
       r.confidence = 'medium';
       r.whyItWorks = 'Opens the line that raised the error so you can inspect the values involved.';
   }
+  if (r.whyItWorksPrefix) {
+    r.whyItWorks = r.whyItWorksPrefix + r.whyItWorks;
+    delete r.whyItWorksPrefix;
+  }
 }
 
 // --- NODE.JS ---
 function parseNode(text, lines, r) {
+  // Stack frames may be file:// URLs (ESM) or http(s) URLs (browser bundles)
+  text = text.replace(/file:\/\//g, '').replace(/https?:\/\/[^/\s)]+/g, '');
   // First stack frame in user code (skip node internals and dependencies)
   const frame = [...text.matchAll(/at (?:.*? \()?((?:[A-Za-z]:)?[^\s():]+):(\d+):(\d+)\)?/g)]
     .find(m => !m[1].startsWith('node:') && !m[1].includes('node_modules'));
@@ -271,7 +325,7 @@ function parseNode(text, lines, r) {
     r.severity = 4;
     r.fixKind = 'shell';
     r.fixCommand = 'npm install --legacy-peer-deps';
-    r.location = 'package.json dependencies';
+    r.location = 'npm dependency tree';
     r.plainExplanation = 'Two of your packages want different versions of the same peer dependency, so npm refuses to pick one.';
     r.rootCause = 'npm peer dependency conflict (ERESOLVE).';
     r.whyItWorks = 'Installs using the pre-npm-7 rules that ignore peer conflicts. Safer long-term: upgrade the package named in the error to a version that supports your setup.';
@@ -334,15 +388,16 @@ function parseNode(text, lines, r) {
 // --- GIT ---
 function parseGit(text, lines, r) {
   r.confidence = 'high';
-  if (/CONFLICT|Merge conflict/i.test(text)) {
-    const files = [...text.matchAll(/Merge conflict in (.+)/g)].map(m => m[1].trim());
+  // Real git output only: the word "conflict" in prose is not a conflict
+  if (/^CONFLICT \(|Merge conflict in |Automatic merge failed/m.test(text)) {
+    const files = [...new Set([...text.matchAll(/Merge conflict in ([^\s`'"]+)/g)].map(m => m[1].replace(/[.,;:]+$/, '')))];
     r.errorType = 'Merge Conflict';
     r.severity = 7;
-    r.location = files.length ? files.join(', ') : 'Working directory';
+    r.location = files[0] || 'Working directory';
     r.fixKind = 'code';
     r.fixCommand = files.length ? openAt(files[0]) : 'git diff --name-only --diff-filter=U';
     r.plainExplanation = `Both branches changed the same lines${files.length ? ` in ${files.map(f => f.split('/').pop()).join(', ')}` : ''}, so Git needs you to choose which version to keep.`;
-    r.rootCause = `Divergent edits to ${r.location}.`;
+    r.rootCause = `Divergent edits to ${files.length > 1 ? `${files.length} files: ${files.slice(0, 5).join(', ')}${files.length > 5 ? ', ...' : ''}` : r.location}.`;
     r.fixDiff = {
       before: '<<<<<<< HEAD\nyour version\n=======\ntheir version\n>>>>>>> branch',
       after: 'the version you want to keep',
@@ -354,10 +409,17 @@ function parseGit(text, lines, r) {
     r.severity = 5;
     r.location = `Branch ${branch}`;
     r.fixKind = 'shell';
-    r.fixCommand = `git pull --rebase origin ${branch}`;
-    r.plainExplanation = 'The remote branch has commits you do not have yet, so Git refuses to overwrite them.';
-    r.rootCause = `Local ${branch} is behind origin/${branch}.`;
-    r.whyItWorks = 'Downloads the new remote commits and replays yours on top. Then git push works. Avoid --force, which would delete your teammates\' commits.';
+    if (/\(stale info\)/.test(text)) {
+      r.fixCommand = `git fetch origin ${branch}`;
+      r.plainExplanation = '--force-with-lease refused the push because your copy of the remote branch is out of date. It is protecting commits you have not seen yet.';
+      r.rootCause = `Lease check failed: the local tracking ref for ${branch} is stale.`;
+      r.whyItWorks = `Updates your view of the remote branch. Check what changed (git log HEAD..origin/${branch}) before pushing again.`;
+    } else {
+      r.fixCommand = `git pull --rebase origin ${branch}`;
+      r.plainExplanation = 'The remote branch has commits you do not have yet, so Git refuses to overwrite them.';
+      r.rootCause = `Local ${branch} is behind origin/${branch}.`;
+      r.whyItWorks = 'Downloads the new remote commits and replays yours on top. Then git push works. Avoid --force, which would delete your teammates\' commits.';
+    }
   } else if (/not a git repository/i.test(text)) {
     r.errorType = 'Not a Git Repository';
     r.severity = 3;

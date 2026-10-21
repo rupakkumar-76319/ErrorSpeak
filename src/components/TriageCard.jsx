@@ -106,8 +106,9 @@ export default function TriageCard({ report, rawText }) {
               <button
                 key={mode}
                 onClick={() => setViewMode(mode)}
+                aria-pressed={viewMode === mode}
                 className={`px-2 py-0.5 rounded-md transition-all ${
-                  viewMode === mode ? 'bg-cyan-500 text-slate-950 font-bold shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                  viewMode === mode ? 'bg-cyan-500 text-ink font-bold shadow-sm' : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
                 {label}
@@ -173,7 +174,7 @@ export default function TriageCard({ report, rawText }) {
             </div>
 
             {report.offendingCode && (
-              <div className="bg-[#050811] rounded-lg p-2.5 border border-rose-900/30 font-mono text-xs text-rose-300 overflow-x-auto whitespace-pre">
+              <div className="bg-code rounded-lg p-2.5 border border-rose-900/30 font-mono text-xs text-rose-300 overflow-x-auto whitespace-pre">
                 <span className="text-rose-500 select-none mr-2">▶</span>
                 {report.offendingCode}
               </div>
@@ -183,7 +184,7 @@ export default function TriageCard({ report, rawText }) {
 
         {/* 3. Fix */}
         {report.fixCommand ? (
-          <div className={`rounded-xl bg-gradient-to-b from-slate-950 to-[#070D18] border p-4 shadow-lg ${boxStyle}`}>
+          <div className={`rounded-xl bg-gradient-to-b from-slate-950 to-code border p-4 shadow-lg ${boxStyle}`}>
             <div className="flex items-center justify-between mb-2.5">
               <div className="flex items-center gap-1.5 text-xs font-mono text-emerald-400 font-semibold">
                 <Terminal className="w-4 h-4" />
@@ -192,7 +193,7 @@ export default function TriageCard({ report, rawText }) {
               <span className="text-[10px] font-mono text-slate-400">{kind.hint}</span>
             </div>
 
-            <div className="flex items-center justify-between gap-3 bg-[#03060E] rounded-lg px-3.5 py-3 border border-emerald-500/30">
+            <div className="flex items-center justify-between gap-3 bg-code rounded-lg px-3.5 py-3 border border-emerald-500/30">
               <div className="font-mono text-xs sm:text-sm text-emerald-300 overflow-x-auto select-all">
                 <span className="text-emerald-500 select-none mr-2">$</span>
                 {report.fixCommand}
@@ -202,7 +203,7 @@ export default function TriageCard({ report, rawText }) {
                 onClick={handleCopy}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-semibold transition-all shrink-0 ${
                   copied
-                    ? 'bg-emerald-500 text-slate-950 font-bold'
+                    ? 'bg-emerald-500 text-ink font-bold'
                     : isDanger
                       ? 'bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-700/60'
                       : 'bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-700/60'

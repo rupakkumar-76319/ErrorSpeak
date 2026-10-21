@@ -30,6 +30,8 @@ ErrorSpeak is a browser-only React app. When the user pastes an error or picks a
 * **Hardware:** any browser; no GPU.
 
 ## Look and Feel
+* **Themes:** dark and light. Every palette is a set of CSS variables; light mode mirrors each scale and keeps the 500/600 accents that carry white text. The theme follows the system setting until the user picks one with the header toggle.
+* **Accessibility:** visible keyboard focus, labelled editor and toggle buttons, reduced-motion support, key text pairs checked against WCAG contrast in both themes.
 * **Palette:** `#070B14` background, slate-900/950 cards, slate-800 borders.
 * **Accents:** cyan (diagnosis), emerald (safe/verified), amber (caution/unverified), rose (errors/destructive), violet (the connected LLM).
 * **Fonts:** Fira Code for terminal content; Inter for explanations.
@@ -106,6 +108,11 @@ interface TriageReport {
   * `stop_reason` checked for `refusal` and `max_tokens` before the parsed output is used.
 * **OpenAI, Gemini, OpenRouter, Groq, and any custom OpenAI-compatible server:** called directly as `POST {base}/chat/completions` with `response_format: { type: "json_object" }`, the system prompt plus an explicit JSON field list, and the response validated with `TriageSchema.safeParse`. Errors are mapped to readable messages for 401/403 (key rejected), 404 (model or endpoint not found), 429 (rate limited), a network/CORS failure, invalid JSON, or the wrong JSON shape.
 * The app works fully without any key or model connected.
+
+## Evaluation
+* `eval/collect.py` gathers real traces from public GitHub issues with 15 fixed searches (newest first, before 2026-10-01): the first 5 per search form the development set, the next 5 the held-out set. User-folder names and emails are masked.
+* Expected environment, error type and location were labelled blind from the trace text alone (`eval/labels.json`, `eval/heldout-labels.json`).
+* `eval/run-eval.mjs` (`npm run eval`) scores the local engine and writes `eval/RESULTS.md` with every miss. The key measure is "confident but wrong", because a confident wrong answer is the failure that hurts beginners.
 
 ## Important Failure Modes
 * **Unrecognized input:** low confidence, no fix command, the AI panel highlighted.

@@ -97,3 +97,21 @@ Revision 1 (2026-10-20): review against the judging criteria found that the plan
   Verify (mechanical): `npm test` covers provider detection; request shape checked with stubbed fetch for OpenAI, Gemini and a local base URL.
   Learner check: modal shows the detected provider.
   Commit: `feat: connect any LLM provider`
+
+Revision 2 (2026-10-20): studying winning Devpost projects showed they measure themselves on data they did not choose and report the misses. ErrorSpeak had only been tested on its own samples, and had only a dark theme.
+
+- [x] **8. Evaluation on real GitHub-issue errors**
+  Becomes usable: `npm run eval` scores the local engine on 141 real traces and writes `eval/RESULTS.md`, including every miss.
+  PRD ref: `prd.md > Local Triage Engine`, `prd.md > Evidence Check`
+  Spec ref: `spec.md > Evaluation`
+  Build: `eval/collect.py` (15 fixed GitHub searches, newest first, no hand-picking; personal info masked), blind labels from a separate reviewer pass, `eval/run-eval.mjs`. Development set (first 5 per search) used to fix general parser gaps: CI timestamps, truncated and chained Python tracebacks, Rich tracebacks, browser JavaScript stacks, `file://` frames, real-git-output-only conflict detection, stale `--force-with-lease`. Held-out set (next 5 per search) collected after tuning and scored once. Also fixed a redaction gap (mixed-slash Windows user paths) found in the data.
+  Verify (mechanical): development 34/51 -> 45/51 all correct; held-out 50/52 all correct, 1/67 confident but wrong, 67/67 fully grounded, 0 destructive commands.
+  Commit: `feat: real-error evaluation and parser fixes`
+
+- [x] **9. Light theme and accessibility**
+  Becomes usable: a sun/moon toggle switches themes (follows the system setting by default, remembered per device); keyboard focus is visible; the editor and toggles have labels.
+  PRD ref: `prd.md > Look and Feel`
+  Spec ref: `spec.md > Look and Feel`
+  Build: palettes driven by CSS variables in `tailwind.config.js` (light mode mirrors each scale), theme script in `index.html` before first paint, `:focus-visible` outline and reduced-motion support in `index.css`, aria labels in `TerminalInput`, `PresetRibbon`, `TriageCard`.
+  Verify (mechanical): WCAG contrast computed for key text pairs in both themes; light-mode labels raised from 3.4:1 to above 4.5:1; Run button changed to blue-violet so white text passes in both themes.
+  Commit: `feat: light theme and accessibility pass`

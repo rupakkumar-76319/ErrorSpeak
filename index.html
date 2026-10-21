@@ -1,6 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
+    <script>
+      // Apply the saved or system theme before first paint, so there is no flash
+      try {
+        var t = localStorage.getItem('errorspeak.theme');
+        if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2'><path d='m4 17 6-6-6-6'/><path d='M12 19h8'/></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,7 +17,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-[#0B0F19] text-slate-100 min-h-screen antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+  <body class="bg-page text-slate-100 min-h-screen antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

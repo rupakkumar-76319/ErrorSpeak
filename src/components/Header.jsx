@@ -1,7 +1,20 @@
-import React from 'react';
-import { Terminal, Cpu, Sparkles, Github } from 'lucide-react';
+import React, { useState } from 'react';
+import { Terminal, Cpu, Sparkles, Github, Sun, Moon } from 'lucide-react';
+
+function useTheme() {
+  const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || 'dark');
+  const toggle = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('errorspeak.theme', next); } catch { /* storage blocked */ }
+    setTheme(next);
+  };
+  return [theme, toggle];
+}
 
 export default function Header({ modelName, onOpenSettings }) {
+  const [theme, toggleTheme] = useTheme();
+
   return (
     <header className="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
@@ -40,6 +53,15 @@ export default function Header({ modelName, onOpenSettings }) {
           >
             <Sparkles className="w-3.5 h-3.5 text-violet-400" />
             <span>{modelName ? `LLM: ${modelName}` : 'Connect Any LLM'}</span>
+          </button>
+
+          <button
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+            title={theme === 'dark' ? 'Light theme' : 'Dark theme'}
+            className="flex items-center justify-center w-8 h-7 rounded-lg bg-slate-800/80 border border-slate-700/60 text-slate-300 hover:bg-slate-700/80 transition-colors"
+          >
+            {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
           </button>
 
           <a

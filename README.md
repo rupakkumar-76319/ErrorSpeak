@@ -42,6 +42,20 @@ A beginner hits a 50-line wall of red text: `KeyError`, `Cannot find module`, `e
 
 **Verification.** `src/engine/grounding.js` (evidence check) and `src/engine/safety.js` (command safety check) run on every diagnosis, whether it came from the rules or from the connected LLM.
 
+## Tested on real errors, not just our samples
+
+We collected **141 real error traces from public GitHub issues** using 15 fixed searches (newest first, no hand-picking), had the expected answers labelled blind, and scored the local engine without any LLM ([full method and every miss](eval/RESULTS.md)).
+
+| | Development set (we tuned on it) | **Held-out set (never seen, scored once)** |
+|---|---|---|
+| Environment, error type and location all correct | 45/51 | **50/52** |
+| Answers that were confident but wrong | 4/66 | **1/67** |
+| Rust, Go and Java errors it admitted it can't handle | 14/15 | **15/15** |
+| Reports where every claim was found in the trace | 66/66 | **67/67** |
+| Destructive commands suggested | 0 | **0** |
+
+Before tuning, the development set scored 34/51 with 12 confident-but-wrong answers. The held-out set may simply have been easier than the development set; it is one honest measurement, not a guarantee. Re-run it with `npm run eval`.
+
 ## Try it
 
 The live demo has 7 sample errors. Two show the new ideas:
@@ -55,6 +69,7 @@ cd ErrorSpeak
 npm install
 npm run dev        # http://localhost:5173/ErrorSpeak/
 npm test           # engine, redaction, safety, evidence and provider-detection tests (no network)
+npm run eval       # score the engine on the 141 real GitHub-issue traces in eval/
 ```
 To connect an LLM, click **Connect Any LLM**, enter a model name, and either paste an API key (Anthropic `sk-ant-...`, OpenAI `sk-...`, Gemini `AIza...`, OpenRouter `sk-or-...`, Groq `gsk_...`) or, under Advanced, set a base URL for any OpenAI-compatible server such as a local Ollama instance (`http://localhost:11434/v1`, key optional there).
 
