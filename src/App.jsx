@@ -4,6 +4,7 @@ import PresetRibbon from './components/PresetRibbon';
 import TerminalInput from './components/TerminalInput';
 import TriageCard from './components/TriageCard';
 import AIPanel from './components/AIPanel';
+import AnswerCheck from './components/AnswerCheck';
 import SettingsModal from './components/SettingsModal';
 import { parseError, detectEnvironment } from './engine/parser';
 import { Terminal, Cpu, Sparkles } from 'lucide-react';
@@ -146,6 +147,7 @@ export default function App() {
                   onAsk={handleAskAI}
                   onOpenSettings={() => setShowSettings(true)}
                 />
+                <AnswerCheck key={analyzedText} rawText={analyzedText} />
               </>
             ) : (
               <div className="h-full min-h-[420px] rounded-2xl bg-slate-900/60 border border-dashed border-slate-800 p-8 flex flex-col items-center justify-center text-center">

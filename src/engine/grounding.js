@@ -1,7 +1,7 @@
 // Evidence check: every claim on the triage card is matched against the raw trace.
 // A diagnosis (local or from an LLM) only earns "verified" marks for facts the trace actually contains.
 
-const norm = (s) => (s || '').replace(/\\\\/g, '\\').replace(/\s+/g, ' ').trim().toLowerCase();
+export const norm = (s) => (s || '').replace(/\\\\/g, '\\').replace(/\s+/g, ' ').trim().toLowerCase();
 
 // Codes the engine reports under their official name, which some traces only show as a phrase
 const ERROR_ALIASES = { MODULE_NOT_FOUND: 'cannot find module' };
@@ -68,7 +68,7 @@ const PIP_ALIASES = {
   beautifulsoup4: 'bs4', 'python-dotenv': 'dotenv', 'python-dateutil': 'dateutil',
 };
 
-function aliasHit(pkg, trace) {
+export function aliasHit(pkg, trace) {
   const alias = PIP_ALIASES[pkg.toLowerCase()];
   return alias ? trace.includes(alias) : false;
 }

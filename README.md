@@ -27,6 +27,7 @@ A beginner hits a 50-line wall of red text: `KeyError`, `Cannot find module`, `e
 | **Fix** | A command labelled as a real fix, a code edit or a diagnostic step, plus a before/after patch. |
 | **Check the claims** | "3/3 claims found in your trace": error type, file, line, quoted code and package names are matched against what you pasted. Anything invented is flagged. |
 | **Check the command** | Destructive or risky commands (`rm -rf`, `git reset --hard`, force push, `curl \| sh`, `docker system prune`) are flagged before you copy them. |
+| **Check any AI's answer (no key needed)** | Copy a prompt with your secrets removed, ask ChatGPT, Gemini or any chat AI, and paste its reply back. Every file, line, package, command and quote in the reply is checked against your error: invented files and package names are flagged (fake package names are a known malware trick), and destructive commands are marked before you run them. |
 | **Connect any LLM (optional)** | For errors the local rules don't know, ask the LLM you connect — Anthropic, OpenAI, Gemini, OpenRouter, Groq, or any OpenAI-compatible server (including a local one like Ollama) — with your own model name and API key. Secrets are removed first, you can preview exactly what is sent, and the model's answer goes through the same checks. |
 
 ## How it works
@@ -60,6 +61,7 @@ Before tuning, the development set scored 34/51 with 12 confident-but-wrong answ
 
 The live demo has 7 sample errors. Two show the new ideas:
 - **Postgres Auth (leaks a password):** the trace contains `postgres://admin:<password>@...`. Open "Preview what is sent" to see it replaced with `<PASSWORD>` and the user folder with `<USER>`.
+- **Check an AI's answer:** load any sample, click "Copy safe prompt", ask any chat AI, and paste its reply into the box below. Try adding a made-up file name or `git reset --hard` to the reply to see them flagged.
 - **Rust Borrow Error:** the local engine has no rule, says "low confidence", and offers to ask the connected LLM.
 
 ### Run locally
@@ -76,6 +78,7 @@ To connect an LLM, click **Connect Any LLM**, enter a model name, and either pas
 ## Limits (honest list)
 - The local rules cover common beginner errors, not everything. Unknown errors are marked low confidence.
 - The evidence check confirms that a claim appears in your trace; it can't prove a fix is correct.
+- The AI-answer check finds files, packages, commands and quoted lines by pattern. Claims made only in prose ("this happens because...") are not checked.
 - Connecting an LLM needs your own API key (or a reachable base URL) and sends the redacted trace to that provider.
 - Some providers may block direct requests from a browser (CORS); this shows up as a connection error in the AI panel.
 - JSON quality for providers without enforced structured output depends on the model you choose.

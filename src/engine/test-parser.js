@@ -4,6 +4,7 @@ import { redactSecrets } from './redact.js';
 import { lintCommand } from './safety.js';
 import { groundReport } from './grounding.js';
 import { detectProvider } from './providers.js';
+import { buildSafePrompt, checkAnswer } from './answer-check.js';
 
 let failures = 0;
 function expect(name, actual, expected) {
@@ -97,6 +98,39 @@ const g = groundReport(py, ERROR_PRESETS[0].rawError);
 expect('Local Python report fully grounded', g.verified, g.total);
 const fake = groundReport({ errorType: 'KeyError', location: 'app/models/user.py:99', fixCommand: 'npm install lodash', evidence: ["KeyError: 'admin'", 'line that is not there'] }, ERROR_PRESETS[0].rawError);
 expect('Invented file, package and quote are caught', fake.total - fake.verified, 3);
+
+console.log('\n--- Checking an answer from any chat AI ---');
+const pgRaw = ERROR_PRESETS.find(p => p.id === 'postgres-secret').rawError;
+expect('Safe prompt has no password', buildSafePrompt(pgRaw).prompt.includes('Sup3rS3cret'), false);
+expect('Safe prompt asks for evidence', buildSafePrompt(pgRaw).prompt.includes('EVIDENCE'), true);
+
+const chatAnswer = `The KeyError comes from \`app/services/auth_service.py\`, line 48. It is also called from app/models/user.py:99.
+
+\`\`\`bash
+pip install pyjwt-helpers==2.1
+git reset --hard HEAD
+\`\`\`
+
+Then add it to requirements.txt.
+
+**EVIDENCE:**
+- \`KeyError: 'admin'\`
+- \`File "app/services/auth.py", line 48\``;
+const check = checkAnswer(chatAnswer, ERROR_PRESETS[0].rawError);
+const status = (kind, label) => check.items.find(i => i.kind === kind && i.label === label)?.status;
+expect('Real file and line confirmed', status('file', 'app/services/auth_service.py:48'), 'ok');
+expect('Invented file flagged', status('file', 'app/models/user.py:99'), 'warn');
+expect('Normal project file is info, not a warning', status('file', 'requirements.txt'), 'info');
+expect('Invented package flagged', status('package', 'pyjwt-helpers'), 'warn');
+expect('Destructive command flagged', status('command', 'git reset --hard HEAD'), 'danger');
+expect('Exact quote confirmed', status('quote', "KeyError: 'admin'"), 'ok');
+expect('Altered quote flagged', status('quote', 'File "app/services/auth.py", line 48'), 'warn');
+expect('Dangerous items listed first', check.items[0].status, 'danger');
+expect('Quote with placeholder matches redacted trace',
+  checkAnswer('EVIDENCE:\npostgres://admin:<PASSWORD>@db.internal:5432/shop', pgRaw).items.find(i => i.kind === 'quote')?.status, 'ok');
+expect('Package named in the error is confirmed',
+  checkAnswer('Run `npm install express`', ERROR_PRESETS[1].rawError).items.find(i => i.kind === 'package')?.status, 'ok');
+expect('No answer, no checks', checkAnswer('', pgRaw).items.length, 0);
 
 console.log('\n--- LLM provider detection ---');
 expect('Anthropic key', detectProvider({ apiKey: 'sk-ant-api03-x' }), 'anthropic');
