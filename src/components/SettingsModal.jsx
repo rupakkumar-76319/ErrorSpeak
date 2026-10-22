@@ -64,7 +64,7 @@ export default function SettingsModal({ config, remember, onSave, onClose }) {
           spellCheck={false}
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value.trim())}
-          placeholder="sk-ant-...  sk-...  AIza...  sk-or-...  gsk_..."
+          placeholder="sk-ant-...  sk-...  AIza... or AQ.  sk-or-...  gsk_..."
           className={inputClass}
         />
 

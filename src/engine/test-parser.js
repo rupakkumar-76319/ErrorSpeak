@@ -82,6 +82,7 @@ expect('Windows user name removed', red.text.includes('jane'), false);
 expect('Mixed-slash Windows path masked', redactSecrets('C:\\Users/joe/AppData/x.py').text, 'C:\\Users/<USER>/AppData/x.py');
 expect('Trace still readable', red.text.includes('password authentication failed'), true);
 const keys = redactSecrets('ANTHROPIC_API_KEY=sk-ant-api03-abcdefghijklmnop1234 token ghp_abcdefghijklmnopqrstuvwxyz0123456789 AKIAIOSFODNN7EXAMPLE');
+expect('New Google key format removed', redactSecrets('key=AQ.Ab8RN6abcdefghijklmnopqrstuvwxyz0123456789').text.includes('AQ.Ab8'), false);
 expect('API keys removed', /sk-ant-api03|ghp_|AKIA/.test(keys.text), false);
 expect('Findings counted', keys.findings.length >= 3, true);
 
@@ -137,6 +138,7 @@ expect('Anthropic key', detectProvider({ apiKey: 'sk-ant-api03-x' }), 'anthropic
 expect('OpenRouter key (not OpenAI)', detectProvider({ apiKey: 'sk-or-v1-x' }), 'openrouter');
 expect('OpenAI key', detectProvider({ apiKey: 'sk-proj-x' }), 'openai');
 expect('Gemini key', detectProvider({ apiKey: 'AIzaSyx' }), 'gemini');
+expect('Gemini key, new AQ. format', detectProvider({ apiKey: 'AQ.Ab8x' }), 'gemini');
 expect('Groq key', detectProvider({ apiKey: 'gsk_x' }), 'groq');
 expect('Base URL wins (e.g. Ollama)', detectProvider({ apiKey: '', baseUrl: 'http://localhost:11434/v1' }), 'custom');
 expect('Unknown key', detectProvider({ apiKey: 'abc123' }), null);

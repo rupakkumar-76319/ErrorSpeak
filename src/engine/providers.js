@@ -16,7 +16,7 @@ export function detectProvider({ apiKey = '', baseUrl = '' }) {
   if (key.startsWith('sk-ant-')) return 'anthropic';
   if (key.startsWith('sk-or-')) return 'openrouter';
   if (key.startsWith('gsk_')) return 'groq';
-  if (key.startsWith('AIza')) return 'gemini';
+  if (key.startsWith('AIza') || key.startsWith('AQ.')) return 'gemini'; // AI Studio issues both formats
   if (key.startsWith('sk-')) return 'openai';
   return null;
 }

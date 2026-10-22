@@ -7,7 +7,7 @@ const RULES = [
   { label: 'OpenAI-style key', pattern: /\bsk-[A-Za-z0-9_\-]{20,}/g, replace: '<API_KEY>' },
   { label: 'GitHub token', pattern: /\b(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{20,}|\bgithub_pat_[A-Za-z0-9_]{20,}/g, replace: '<GITHUB_TOKEN>' },
   { label: 'AWS access key', pattern: /\b(?:AKIA|ASIA)[A-Z0-9]{16}\b/g, replace: '<AWS_KEY>' },
-  { label: 'Google API key', pattern: /\bAIza[0-9A-Za-z_\-]{35}\b/g, replace: '<API_KEY>' },
+  { label: 'Google API key', pattern: /\bAIza[0-9A-Za-z_\-]{35}\b|\bAQ\.Ab[0-9A-Za-z_\-]{30,}/g, replace: '<API_KEY>' },
   { label: 'Slack token', pattern: /\bxox[abprs]-[A-Za-z0-9-]{10,}/g, replace: '<SLACK_TOKEN>' },
   { label: 'JWT', pattern: /\beyJ[A-Za-z0-9_\-]{8,}\.[A-Za-z0-9_\-]{8,}\.[A-Za-z0-9_\-]{8,}/g, replace: '<JWT>' },
   { label: 'Bearer token', pattern: /(Bearer\s+)[A-Za-z0-9._\-~+/]{12,}=*/gi, replace: '$1<TOKEN>' },
