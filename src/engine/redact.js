@@ -1,5 +1,5 @@
 // Strips secrets and personal identifiers from a trace before it can leave the browser.
-// Runs on every "Ask Claude" request, and the user sees exactly what will be sent.
+// Runs on every LLM request, and the user sees exactly what will be sent.
 
 const RULES = [
   { label: 'Private key block', pattern: /-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----/g, replace: '<PRIVATE_KEY>' },

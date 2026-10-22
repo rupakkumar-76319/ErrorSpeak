@@ -549,5 +549,5 @@ function parseGeneric(lines, r) {
   r.plainExplanation = `The local engine doesn't have a rule for this error yet. The first line says: "${lines[0]}"`;
   r.rootCause = lines.slice(0, 2).join(' — ');
   r.fixCommand = '';
-  r.whyItWorks = 'Ask Claude for a full diagnosis of this error.';
+  r.whyItWorks = 'Ask your connected LLM for a full diagnosis of this error.';
 }

@@ -1,5 +1,5 @@
 // Evidence check: every claim on the triage card is matched against the raw trace.
-// A diagnosis (local or from Claude) only earns "verified" marks for facts the trace actually contains.
+// A diagnosis (local or from an LLM) only earns "verified" marks for facts the trace actually contains.
 
 const norm = (s) => (s || '').replace(/\\\\/g, '\\').replace(/\s+/g, ' ').trim().toLowerCase();
 
@@ -51,7 +51,7 @@ export function groundReport(report, rawText) {
     checks.push({ label: `Package "${pkg}" is named in the trace`, ok: trace.includes(norm(root)) || aliasHit(root, trace) });
   }
 
-  // 5. Evidence quotes returned by Claude must exist verbatim
+  // 5. Evidence quotes returned by the LLM must exist verbatim
   for (const quote of report.evidence || []) {
     if (!quote || quote.length < 4) continue;
     const short = quote.length > 60 ? quote.slice(0, 57) + '...' : quote;

@@ -37,7 +37,7 @@ expect('Postgres error type (dotted name with digits)', pg.errorType, 'Operation
 expect('Postgres fix does not echo the password', pg.fixCommand.includes('Sup3rS3cret'), false);
 
 const rust = preset('rust-borrow');
-expect('Rust is low confidence locally (hands off to Claude)', rust.confidence, 'low');
+expect('Rust is low confidence locally (hands off to the LLM)', rust.confidence, 'low');
 
 console.log('\n--- Custom errors ---');
 const nested = parseError(`Traceback (most recent call last):

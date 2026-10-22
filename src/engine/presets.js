@@ -68,7 +68,7 @@ DATABASE_URL=postgres://admin:Sup3rS3cret!@db.internal:5432/shop`,
   {
     id: 'rust-borrow',
     label: 'Rust Borrow Error',
-    env: 'Needs Claude',
+    env: 'Needs an LLM',
     rawError: `error[E0382]: borrow of moved value: \`names\`
  --> src/main.rs:5:22
   |
