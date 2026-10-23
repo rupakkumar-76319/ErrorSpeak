@@ -75,6 +75,17 @@ At line:1 char:1
 expect('PowerShell command name', pwsh.offendingCode, 'thi');
 expect('PowerShell location', pwsh.location, 'Line 1, Char 1');
 
+const indent = parseError(`  File "app.py", line 4
+    print("Hello")
+    ^
+IndentationError: expected an indented block after 'if' statement on line 3`);
+expect('Missing indent: fix indents the line', indent.fixDiff?.after.startsWith('    print("Hello")'), true);
+
+const lock = parseError(`npm ERR! \`npm ci\` can only install packages when your package.json and package-lock.json are in sync.
+npm ERR! Missing: axios@1.7.2 from lock file`);
+expect('npm ci lock out of sync -> npm install', lock.fixCommand, 'npm install');
+expect('npm ci names the missing package', lock.rootCause.includes('axios'), true);
+
 console.log('\n--- Secret redaction ---');
 const red = redactSecrets(ERROR_PRESETS.find(p => p.id === 'postgres-secret').rawError);
 expect('Password removed', red.text.includes('Sup3rS3cret'), false);

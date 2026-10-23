@@ -233,9 +233,19 @@ function parsePython(text, r) {
       r.rootCause = `${detail} at ${r.location}.`;
       r.whyItWorks = 'Fix the spelling, add the missing import, or define the variable before this line.';
       break;
-    case 'SyntaxError':
     case 'IndentationError':
     case 'TabError':
+      if (/expected an indented block/.test(detail)) {
+        const owner = (detail.match(/after '(\w+)' statement on line (\d+)/) || []);
+        r.severity = 4;
+        r.plainExplanation = `Python expected the code under ${owner[1] ? `the '${owner[1]}' on line ${owner[2]}` : 'the previous line'} to be indented, but this line starts at the same level. Nothing ran yet.`;
+        r.rootCause = `${r.errorType}: ${detail} at ${r.location}.`;
+        if (tb.code) r.fixDiff = { before: tb.code, after: `    ${tb.code}  # indented 4 spaces, inside the block` };
+        r.whyItWorks = 'Python uses indentation to know which lines belong to an if, for, def or class. Indent this line (4 spaces) so it sits inside the block, or add pass if the block should be empty.';
+        break;
+      }
+    // falls through
+    case 'SyntaxError':
       r.severity = 4;
       r.plainExplanation = `Python couldn't read this line because it breaks the language rules: ${detail}. Nothing ran yet.`;
       r.rootCause = `${r.errorType}: ${detail} at ${r.location}.`;
@@ -329,6 +339,16 @@ function parseNode(text, lines, r) {
     r.plainExplanation = 'Two of your packages want different versions of the same peer dependency, so npm refuses to pick one.';
     r.rootCause = 'npm peer dependency conflict (ERESOLVE).';
     r.whyItWorks = 'Installs using the pre-npm-7 rules that ignore peer conflicts. Safer long-term: upgrade the package named in the error to a version that supports your setup.';
+  } else if (/can only install packages when your package\.json and package-lock\.json[^\n]*in sync/i.test(text)) {
+    const missing = [...text.matchAll(/Missing: (\S+?)(?:@[\d^~][^\s]*)? from lock file/g)].map(m => m[1]);
+    r.errorType = 'Lock File Out of Sync';
+    r.severity = 4;
+    r.location = 'package-lock.json';
+    r.fixKind = 'shell';
+    r.fixCommand = 'npm install';
+    r.plainExplanation = `npm ci installs exactly what package-lock.json lists, and refuses because package.json asks for something the lock file doesn't have${missing.length ? ` (${missing.join(', ')})` : ''}. Someone changed package.json without updating the lock file.`;
+    r.rootCause = `package.json and package-lock.json disagree${missing.length ? `: missing ${missing.join(', ')}` : ''}.`;
+    r.whyItWorks = `Run it on your own machine, not in the Dockerfile: npm install rewrites package-lock.json to match package.json. Commit the updated package-lock.json, then the build${/failed to solve|RUN npm ci/.test(text) ? ' (docker build)' : ''} passes.`;
   } else if (mod) {
     const name = mod[1];
     r.errorType = 'MODULE_NOT_FOUND';
@@ -377,8 +397,9 @@ function parseNode(text, lines, r) {
     } else {
       r.errorType = 'Node.js Error';
       r.confidence = 'low';
-      r.plainExplanation = lines.find(l => /error/i.test(l)) || lines[0];
-      r.rootCause = r.plainExplanation;
+      const first = lines.find(l => /error/i.test(l)) || lines[0];
+      r.plainExplanation = `The local engine doesn't have a rule for this Node.js error yet. The first error line says: "${first}"`;
+      r.rootCause = first;
       r.fixCommand = 'npm ls --depth=0';
       r.whyItWorks = 'Lists installed top-level packages to spot missing or broken dependencies.';
     }
