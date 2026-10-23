@@ -524,7 +524,7 @@ function parseCors(text, r) {
   const origin = (text.match(/from origin '([^']+)'/) || [])[1] || 'http://localhost:3000';
   const target = (text.match(/(?:fetch|XMLHttpRequest) at '([^']+)'/) || [])[1];
   let targetOrigin = null;
-  try { targetOrigin = target && new URL(target).origin; } catch { /* malformed URL in trace */ }
+  try { targetOrigin = target && new URL(target).origin; } catch {}
   r.errorType = /preflight/i.test(text) ? 'CORS Preflight Blocked' : 'CORS Blocked';
   r.severity = 6;
   r.location = targetOrigin ? `Server at ${targetOrigin}` : 'API server response headers';

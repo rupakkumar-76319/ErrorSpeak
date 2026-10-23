@@ -20,7 +20,6 @@ export default function TerminalInput({
 
   return (
     <div className="flex flex-col h-full rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl overflow-hidden backdrop-blur-sm">
-      {/* Terminal Title Bar */}
       <div className="flex items-center justify-between px-4 py-3 bg-slate-950/80 border-b border-slate-800/80">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5">
@@ -54,9 +53,7 @@ export default function TerminalInput({
         </div>
       </div>
 
-      {/* Editor Body with Line Numbers */}
       <div className="relative flex-1 flex bg-page min-h-[300px]">
-        {/* Line Numbers Bar */}
         <div aria-hidden="true" className="select-none py-3 px-2 text-right font-mono text-xs text-slate-600 bg-slate-950/40 border-r border-slate-800/40 min-w-[2.5rem]">
           {Array.from({ length: Math.max(lineCount, 12) }).map((_, i) => (
             <div key={i} className="leading-6">
@@ -65,7 +62,6 @@ export default function TerminalInput({
           ))}
         </div>
 
-        {/* Textarea */}
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -77,7 +73,6 @@ export default function TerminalInput({
         />
       </div>
 
-      {/* Action Footer */}
       <div className="flex items-center justify-between px-4 py-2.5 bg-slate-950/60 border-t border-slate-800/80 text-xs font-mono text-slate-400">
         <div className="flex items-center gap-3">
           <span>{lineCount} lines</span>

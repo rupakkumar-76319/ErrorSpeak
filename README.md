@@ -34,7 +34,7 @@ A beginner hits a 50-line wall of red text: `KeyError`, `Cannot find module`, `e
 
 **Local-first.** A rule-based engine in `src/engine/parser.js` handles common Python, Node.js, Git, Docker, CORS and shell errors in the browser, offline, and reports its own confidence. When it has no rule, it says so instead of guessing.
 
-**AI where it helps.** You choose the model: enter a model name and an API key (or a custom base URL for a local or self-hosted server). `src/engine/providers.js` detects the provider from the key prefix (`sk-ant-` Anthropic, `sk-or-` OpenRouter, `gsk_` Groq, `AIza` or `AQ.` Gemini, `sk-` OpenAI) or from the base URL. Anthropic is called directly from the browser through the Anthropic SDK (`src/engine/claude.js`); every other provider is called as an OpenAI-compatible chat-completions endpoint (`src/engine/llm.js`). Both share one contract (`src/engine/triage-schema.js`):
+**AI where it helps.** You choose the model: paste an API key (or set a custom base URL for a local or self-hosted server) and pick a model from the list your key can use, which ErrorSpeak fetches from the provider. `src/engine/providers.js` detects the provider from the key prefix (`sk-ant-` Anthropic, `sk-or-` OpenRouter, `gsk_` Groq, `AIza` or `AQ.` Gemini, `sk-` OpenAI) or from the base URL. Anthropic is called directly from the browser through the Anthropic SDK (`src/engine/claude.js`); every other provider is called as an OpenAI-compatible chat-completions endpoint (`src/engine/llm.js`). Both share one contract (`src/engine/triage-schema.js`):
 - **structured output** (a zod schema, enforced server-side for Anthropic and validated client-side for the rest) so the answer always has the same shape as the local report;
 - **verbatim evidence quotes** that the app checks character by character against the trace;
 - **clear error handling** for rejected keys, rate limits, missing models, network/CORS failures and malformed JSON, so a failed request doesn't break the app.
@@ -73,7 +73,7 @@ npm run dev        # http://localhost:5173/ErrorSpeak/
 npm test           # engine, redaction, safety, evidence and provider-detection tests (no network)
 npm run eval       # score the engine on the 141 real GitHub-issue traces in eval/
 ```
-To connect an LLM, click **Connect Any LLM**, enter a model name, and either paste an API key (Anthropic `sk-ant-...`, OpenAI `sk-...`, Gemini `AIza...` or `AQ....`, OpenRouter `sk-or-...`, Groq `gsk_...`) or, under Advanced, set a base URL for any OpenAI-compatible server such as a local Ollama instance (`http://localhost:11434/v1`, key optional there).
+To connect an LLM, click **Connect Any LLM**, paste an API key (Anthropic `sk-ant-...`, OpenAI `sk-...`, Gemini `AIza...` or `AQ....`, OpenRouter `sk-or-...`, Groq `gsk_...`) or, under Advanced, set a base URL for any OpenAI-compatible server such as a local Ollama instance (`http://localhost:11434/v1`, key optional there). Then pick a model from the list; "Other" lets you type a name.
 
 ## Limits (honest list)
 - The local rules cover common beginner errors, not everything. Unknown errors are marked low confidence.

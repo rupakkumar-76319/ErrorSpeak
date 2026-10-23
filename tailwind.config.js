@@ -28,7 +28,6 @@ for (const s of SCALES) {
 Object.assign(darkVars, { '--c-white': '255 255 255', '--c-page': '7 11 20', '--c-code': '5 8 17' });
 Object.assign(lightVars, { '--c-white': rgb(colors.slate[900]), '--c-page': rgb(colors.slate[50]), '--c-code': '255 255 255' });
 
-/** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {

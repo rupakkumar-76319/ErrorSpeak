@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { KeyRound, X, ShieldCheck, Trash2, ChevronRight } from 'lucide-react';
+import { KeyRound, X, ShieldCheck, Trash2, ChevronRight, Loader2 } from 'lucide-react';
 import { PROVIDERS, detectProvider } from '../engine/providers';
+import { listModels } from '../engine/llm';
+
+const OTHER = '__other__';
 
 export default function SettingsModal({ config, remember, onSave, onClose }) {
   const [model, setModel] = useState(config.model);
@@ -8,6 +11,10 @@ export default function SettingsModal({ config, remember, onSave, onClose }) {
   const [baseUrl, setBaseUrl] = useState(config.baseUrl);
   const [showAdvanced, setShowAdvanced] = useState(!!config.baseUrl);
   const [keep, setKeep] = useState(remember);
+  const [models, setModels] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState('');
+  const [typing, setTyping] = useState(false);
 
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose();
@@ -17,6 +24,29 @@ export default function SettingsModal({ config, remember, onSave, onClose }) {
 
   const provider = detectProvider({ apiKey, baseUrl });
   const canSave = model.trim() && provider && (apiKey || provider === 'custom');
+
+  // Ask the provider which models this key can use, shortly after the key stops changing
+  useEffect(() => {
+    setModels([]);
+    setLoadError('');
+    if (!provider || (!apiKey && provider !== 'custom')) return;
+    let stale = false;
+    setLoading(true);
+    const t = setTimeout(async () => {
+      try {
+        const { models: list, defaultModel } = await listModels({ apiKey, baseUrl });
+        if (stale) return;
+        setModels(list);
+        setModel((m) => (list.includes(m) ? m : defaultModel));
+        setTyping(!list.length);
+      } catch (e) {
+        if (!stale) { setLoadError(e.message); setTyping(true); }
+      } finally {
+        if (!stale) setLoading(false);
+      }
+    }, 400);
+    return () => { stale = true; clearTimeout(t); setLoading(false); };
+  }, [apiKey, baseUrl, provider]);
 
   const inputClass =
     'w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2 text-sm font-mono text-slate-100 focus:outline-none focus:border-violet-500';
@@ -42,19 +72,7 @@ export default function SettingsModal({ config, remember, onSave, onClose }) {
           The local engine works without this. Connect the model you already use to get a second opinion on errors the local rules don't cover.
         </p>
 
-        <label className="block text-[11px] font-mono text-slate-400 mb-1" htmlFor="llm-model">Model name</label>
-        <input
-          id="llm-model"
-          type="text"
-          autoComplete="off"
-          spellCheck={false}
-          value={model}
-          onChange={(e) => setModel(e.target.value.trim())}
-          placeholder={provider ? PROVIDERS[provider].example : 'e.g. claude-opus-5'}
-          className={inputClass}
-        />
-
-        <label className="block text-[11px] font-mono text-slate-400 mb-1 mt-3" htmlFor="llm-key">
+        <label className="block text-[11px] font-mono text-slate-400 mb-1" htmlFor="llm-key">
           API key{provider === 'custom' ? ' (optional for local servers)' : ''}
         </label>
         <input
@@ -77,6 +95,46 @@ export default function SettingsModal({ config, remember, onSave, onClose }) {
             <span className="text-slate-500">Works with Anthropic, OpenAI, Gemini, OpenRouter, Groq, or any OpenAI-compatible server.</span>
           )}
         </div>
+
+        <label className="block text-[11px] font-mono text-slate-400 mb-1 mt-3" htmlFor="llm-model">Model</label>
+        {!provider ? (
+          <select id="llm-model" disabled className={`${inputClass} text-slate-500`}><option>Paste your API key first</option></select>
+        ) : loading ? (
+          <div className={`${inputClass} flex items-center gap-2 text-slate-400`}>
+            <Loader2 className="w-3.5 h-3.5 animate-spin" /> Finding the models your key can use...
+          </div>
+        ) : (
+          <>
+            {models.length > 0 && (
+              <select
+                id="llm-model"
+                value={typing ? OTHER : model}
+                onChange={(e) => {
+                  if (e.target.value === OTHER) { setTyping(true); setModel(''); }
+                  else { setTyping(false); setModel(e.target.value); }
+                }}
+                className={inputClass}
+              >
+                {models.map((m) => <option key={m} value={m}>{m}</option>)}
+                <option value={OTHER}>Other (type a model name)</option>
+              </select>
+            )}
+            {typing && (
+              <input
+                id={models.length ? 'llm-model-other' : 'llm-model'}
+                aria-label="Model name"
+                type="text"
+                autoComplete="off"
+                spellCheck={false}
+                value={model}
+                onChange={(e) => setModel(e.target.value.trim())}
+                placeholder={PROVIDERS[provider].example}
+                className={`${inputClass} ${models.length ? 'mt-2' : ''}`}
+              />
+            )}
+            {loadError && <div className="mt-1 text-[11px] font-mono text-amber-300">Couldn't list models: {loadError}</div>}
+          </>
+        )}
 
         <button
           onClick={() => setShowAdvanced((v) => !v)}

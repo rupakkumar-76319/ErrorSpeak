@@ -82,7 +82,6 @@ export default function TriageCard({ report, rawText }) {
 
   return (
     <div className="flex flex-col h-full rounded-2xl bg-slate-900/90 border border-slate-800 shadow-2xl overflow-hidden backdrop-blur-sm">
-      {/* Triage Header */}
       <div className="p-4 bg-slate-950/90 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 flex-wrap">
           <span className={`text-xs font-mono font-semibold px-2.5 py-1 rounded-lg border ${getEnvBadgeColor(report.environment)}`}>
@@ -118,7 +117,6 @@ export default function TriageCard({ report, rawText }) {
         </div>
       </div>
 
-      {/* Provenance strip */}
       <div className="px-4 py-2 bg-slate-950/50 border-b border-slate-800/80 flex flex-wrap items-center gap-2 text-[11px] font-mono">
         {report.source === 'ai' ? (
           <span className="px-2 py-0.5 rounded border bg-violet-950/60 border-violet-800 text-violet-300 flex items-center gap-1">
@@ -147,9 +145,7 @@ export default function TriageCard({ report, rawText }) {
         )}
       </div>
 
-      {/* Body Content */}
       <div className="p-5 flex-1 flex flex-col gap-4 overflow-y-auto max-h-[640px]">
-        {/* 1. Plain English Translation */}
         <div className="rounded-xl bg-gradient-to-r from-cyan-950/30 to-blue-950/20 border border-cyan-800/40 p-4">
           <div className="flex items-center gap-2 mb-1.5 text-cyan-400 font-mono text-xs font-semibold">
             <Sparkles className="w-4 h-4" />
@@ -160,7 +156,6 @@ export default function TriageCard({ report, rawText }) {
           </p>
         </div>
 
-        {/* 2. Location & Fault Line Pinpoint */}
         {report.location && (
           <div className="rounded-xl bg-slate-950/60 border border-slate-800/80 p-3.5 flex flex-col gap-2">
             <div className="flex items-center justify-between gap-2 text-xs font-mono text-slate-400">
@@ -182,7 +177,6 @@ export default function TriageCard({ report, rawText }) {
           </div>
         )}
 
-        {/* 3. Fix */}
         {report.fixCommand ? (
           <div className={`rounded-xl bg-gradient-to-b from-slate-950 to-code border p-4 shadow-lg ${boxStyle}`}>
             <div className="flex items-center justify-between mb-2.5">
@@ -214,7 +208,6 @@ export default function TriageCard({ report, rawText }) {
               </button>
             </div>
 
-            {/* Safety check */}
             {safety.level !== 'none' && (
               <div
                 className={`mt-3 text-xs font-sans flex items-start gap-2 rounded-lg p-2.5 border ${
@@ -250,11 +243,10 @@ export default function TriageCard({ report, rawText }) {
         ) : (
           <div className="rounded-xl bg-slate-950/60 border border-dashed border-slate-700 p-4 text-xs text-slate-400 font-sans flex items-start gap-2">
             <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
-            No reliable fix from the local rules. Ask your LLM below rather than guessing.
+            <b>No reliable fix from the local rules. Ask your LLM below rather than guessing.</b>
           </div>
         )}
 
-        {/* 4. Code Diff */}
         {report.fixDiff && (
           <div className="rounded-xl bg-slate-950/70 border border-slate-800/80 p-3.5 flex flex-col gap-2">
             <div className="flex items-center gap-1.5 text-xs font-mono text-slate-400">
@@ -274,7 +266,6 @@ export default function TriageCard({ report, rawText }) {
           </div>
         )}
 
-        {/* 5. Evidence check */}
         {grounding.total > 0 && (
           <details className="rounded-xl bg-slate-950/60 border border-slate-800/80 p-3.5 group" open={grounding.verified < grounding.total}>
             <summary className="cursor-pointer text-xs font-mono text-slate-400 flex items-center gap-1.5 list-none">

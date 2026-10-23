@@ -8,6 +8,18 @@ import { TriageSchema, SYSTEM_PROMPT, buildUserMessage, toReport } from './triag
 const SUPPORTS_EFFORT = /^claude-(opus-5|opus-4-[5-8]|sonnet-5|sonnet-4-6|fable)/;
 const SUPPORTS_FALLBACK = /^claude-(opus-5|fable)/;
 
+// The API lists newest models first
+export async function listClaudeModels(apiKey) {
+  const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true, maxRetries: 1 });
+  const ids = [];
+  try {
+    for await (const m of client.models.list({ limit: 100 })) ids.push(m.id);
+  } catch (err) {
+    throw new Error(describeError(err));
+  }
+  return ids;
+}
+
 export async function analyzeWithClaude({ apiKey, model, redactedText, localReport }) {
   const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true, maxRetries: 1 });
 
